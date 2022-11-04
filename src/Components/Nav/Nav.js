@@ -22,7 +22,7 @@ export default function ButtonAppBar() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Feed
+            Listings Feed
           </Typography>
           <Button color="inherit">User Login</Button>
         </Toolbar>

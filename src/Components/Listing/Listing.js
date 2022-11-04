@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 
 export default function Listing() {
   return (
-    <Card sx={{ minWidth: 275 }}>
+    <Card sx={{ width: 1/2 }} >
       <CardContent>
         <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
           Listing owner/userID
