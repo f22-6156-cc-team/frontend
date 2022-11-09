@@ -22,9 +22,9 @@ export default function ButtonAppBar() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Listings Feed
+            App Name: Finding Roomates
           </Typography>
-          <Button color="inherit">User Login</Button>
+          <Button href="/userprofile" color="inherit">User Profile</Button>
         </Toolbar>
       </AppBar>
     </Box>
