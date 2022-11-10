@@ -1,38 +1,47 @@
-export const stockData = [
+export const UserContactData = [
     {
-      company: "Twitter Inc",
-      ticker: "TWTR",
-      stockPrice: "22.76 USD",
-      timeElapsed: "5 sec ago",
+        "userId": 1,
+        "emails": ["123@abc.com"],
+        "primaryEmailId": 1,
+        "phones": ["1234567890"],
+        "primaryPhoneId": 1,
+        "addresses": ["Home"],
+        "primaryAddressId": 1
     },
     {
-      company: "Square Inc",
-      ticker: "SQ",
-      stockPrice: "45.28 USD",
-      timeElapsed: "10 sec ago",
+        "userId": 2,
+        "emails": ["234@abc.com"],
+        "primaryEmailId": 2,
+        "phones": ["1234567891"],
+        "primaryPhoneId": 2,
+        "addresses": ["Home"],
+        "primaryAddressId": 2
     },
     {
-      company: "Shopify Inc",
-      ticker: "SHOP",
-      stockPrice: "341.79 USD",
-      timeElapsed: "3 sec ago",
+        "userId": 3,
+        "emails": ["345@abc.com"],
+        "primaryEmailId": 3,
+        "phones": ["1234567892"],
+        "primaryPhoneId": 3,
+        "addresses": ["Home"],
+        "primaryAddressId": 3
     },
     {
-      company: "Sunrun Inc",
-      ticker: "RUN",
-      stockPrice: "9.87 USD",
-      timeElapsed: "4 sec ago",
+        "userId": 4,
+        "emails": ["456@abc.com"],
+        "primaryEmailId": 4,
+        "phones": ["1234567893"],
+        "primaryPhoneId": 4,
+        "addresses": ["Home"],
+        "primaryAddressId": 4
     },
     {
-      company: "Adobe Inc",
-      ticker: "ADBE",
-      stockPrice: "300.99 USD",
-      timeElapsed: "10 sec ago",
-    },
-    {
-      company: "HubSpot Inc",
-      ticker: "HUBS",
-      stockPrice: "115.22 USD",
-      timeElapsed: "12 sec ago",
+        "userId": 5,
+        "emails": ["567@abc.com"],
+        "primaryEmailId": 5,
+        "phones": ["1234567894"],
+        "primaryPhoneId": 5,
+        "addresses": ["Home"],
+        "primaryAddressId": 5
     },
   ];
