@@ -1,5 +1,6 @@
 import React from 'react'
 import Sidebar from "../UserSidebar/Sidebar";
+import { UserData } from "../../Assets/UserData"
 import "./User.css"
 
 function UserProfile() {
@@ -7,9 +8,8 @@ function UserProfile() {
     <div> 
       <Sidebar/> 
       <ul className='mainText'>
-        <li> User Name </li>
-        <li> User ID </li>
-        <li> Description </li>
+        <li> User Name: {UserData[0].username} </li>
+        <li> User ID:   {UserData[0].userId}   </li>
       </ul>
     </div>
   );

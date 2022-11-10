@@ -1,4 +1,4 @@
-export const UserContactData = [
+export const UserData = [
     {
         "userId": 1,
         "username": "a",

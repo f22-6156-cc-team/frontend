@@ -1,26 +1,32 @@
 import React from 'react'
 import { useState } from 'react';
 import Sidebar from "../UserSidebar/Sidebar";
+import { UserPreferenceData } from '../../Assets/UserPreferenceData';
 import "./User.css"
 
 function UserPreference() {
-    const [inputs, setInputs] = useState({});
+    // const [inputs, setInputs] = useState({});
 
-    const handleChange = (event) => {
-        const name = event.target.name;
-        const value = event.target.value;
-        setInputs(values => ({...values, [name]: value}))
-    }
+    // const handleChange = (event) => {
+    //     const name = event.target.name;
+    //     const value = event.target.value;
+    //     setInputs(values => ({...values, [name]: value}))
+    // }
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        alert(inputs);
-    }
+    // const handleSubmit = (event) => {
+    //     event.preventDefault();
+    //     alert(inputs);
+    // }
 
     return (
         <div>
             <Sidebar/> 
-            <form onSubmit={handleSubmit}>
+            <ul className='mainText'>
+                <li> Sleeping Time: {UserPreferenceData[0].sleepingTime} </li>
+                <li> Wakeup Time:   {UserPreferenceData[0].wakeupTime}   </li>
+            </ul>
+
+            {/* <form onSubmit={handleSubmit}>
                 <label>Enter your sleeping time:
                 <input 
                     type="text" 
@@ -38,7 +44,7 @@ function UserPreference() {
                     />
                 </label>
                 <input type="submit" />
-            </form>
+            </form> */}
         </div>
         
     )
