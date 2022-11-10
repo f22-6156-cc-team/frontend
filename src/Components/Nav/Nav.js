@@ -21,8 +21,8 @@ export default function ButtonAppBar() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }} href="/">
-            App Name: Finding Roomates
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            App Name
           </Typography>
           <Button href="/userprofile" color="inherit">
             User Profile
