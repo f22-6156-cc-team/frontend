@@ -1,4 +1,4 @@
-import Listing from '../Listing/Listing';
+import ListingContainer from '../ListingContainer/ListingContainer';
 import Box from '@mui/material/Box';
 
 function LandingPage() {
@@ -12,7 +12,7 @@ function LandingPage() {
           bgcolor: 'background.paper',
           borderRadius: 1,
         }}>
-        <Listing/>
+        <ListingContainer/>
       </Box>
       
     </div>
