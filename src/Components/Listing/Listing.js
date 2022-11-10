@@ -14,7 +14,7 @@ const Listing = ({ listingData }) => {
     };
 
     return (
-        <Card sx={{ width: 1/2 }} >
+        <Card classNam="card">
             <CardContent>
                 <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                     {listingData.listingName}

@@ -1,11 +1,28 @@
-<<<<<<< HEAD
-=======
-import Nav from '../Nav/Nav';
->>>>>>> d65ee08d5dc2914dfbb60e029eac8ecc15a4ef81
 import ListingContainer from '../ListingContainer/ListingContainer';
 import Box from '@mui/material/Box';
+import { ListingContainerData } from '../../Assets/ListingContainerData';
 
 function LandingPage() {
+
+    const listingsData = ListingContainerData;
+
+    // const [listingsData, setListingsData] = useState([]);
+    // useEffect(async () => {
+    //     // get all listing data
+    //     let json;
+    //     try {
+    //         const response = await fetch('/listings');
+    //         const json = await response.json();
+    //     } catch (error) {
+    //         console.log(error);
+    //         json = [];
+    //     }
+    //     setListingsData(json);
+    //     // const res = response.json();
+    //     // res.then(data => setCurrentTime(data.time));
+    // }, []);
+
+
   return (
     <div>
       <Box sx={{
@@ -16,7 +33,7 @@ function LandingPage() {
           bgcolor: 'background.paper',
           borderRadius: 1,
         }}>
-        <ListingContainer/>
+        <ListingContainer listingsData={listingsData}/>
       </Box>
       
     </div>
