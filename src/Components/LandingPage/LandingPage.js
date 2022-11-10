@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+import Nav from '../Nav/Nav';
+>>>>>>> d65ee08d5dc2914dfbb60e029eac8ecc15a4ef81
 import ListingContainer from '../ListingContainer/ListingContainer';
 import Box from '@mui/material/Box';
 
