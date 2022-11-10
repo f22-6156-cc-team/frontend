@@ -5,7 +5,6 @@ import Box from '@mui/material/Box';
 function LandingPage() {
   return (
     <div>
-      <Nav/>
       <Box sx={{
           display: 'flex',
           justifyContent: 'center',
