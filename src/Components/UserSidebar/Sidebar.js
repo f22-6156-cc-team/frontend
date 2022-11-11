@@ -24,8 +24,8 @@ function Sidebar() {
           );
         })}
       </ul>
-      <hr />
+      {/* <hr /> */}
     </div>
   );
-};
+}
 export default Sidebar;

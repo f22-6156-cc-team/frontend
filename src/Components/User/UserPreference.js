@@ -1,32 +1,32 @@
-import React from 'react'
-import { useState } from 'react';
+import React from "react";
+import { useState } from "react";
 import Sidebar from "../UserSidebar/Sidebar";
-import { UserPreferenceData } from '../../Assets/UserPreferenceData';
-import "./User.css"
+import { UserPreferenceData } from "../../Assets/UserPreferenceData";
+import "./User.css";
 
 function UserPreference() {
-    // const [inputs, setInputs] = useState({});
+  // const [inputs, setInputs] = useState({});
 
-    // const handleChange = (event) => {
-    //     const name = event.target.name;
-    //     const value = event.target.value;
-    //     setInputs(values => ({...values, [name]: value}))
-    // }
+  // const handleChange = (event) => {
+  //     const name = event.target.name;
+  //     const value = event.target.value;
+  //     setInputs(values => ({...values, [name]: value}))
+  // }
 
-    // const handleSubmit = (event) => {
-    //     event.preventDefault();
-    //     alert(inputs);
-    // }
+  // const handleSubmit = (event) => {
+  //     event.preventDefault();
+  //     alert(inputs);
+  // }
 
-    return (
-        <div>
-            <Sidebar/> 
-            <ul className='mainText'>
-                <li> Sleeping Time: {UserPreferenceData[0].sleepingTime} </li>
-                <li> Wakeup Time:   {UserPreferenceData[0].wakeupTime}   </li>
-            </ul>
+  return (
+    <div>
+      <Sidebar />
+      <ul className="mainText">
+        <li> Sleeping Time: {UserPreferenceData[0].sleepingTime} </li>
+        <li> Wakeup Time: {UserPreferenceData[0].wakeupTime} </li>
+      </ul>
 
-            {/* <form onSubmit={handleSubmit}>
+      {/* <form onSubmit={handleSubmit}>
                 <label>Enter your sleeping time:
                 <input 
                     type="text" 
@@ -45,9 +45,8 @@ function UserPreference() {
                 </label>
                 <input type="submit" />
             </form> */}
-        </div>
-        
-    )
+    </div>
+  );
 }
 
-export default UserPreference
+export default UserPreference;
