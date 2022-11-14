@@ -1,11 +1,11 @@
 import './App.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import React from 'react'
-import LandingPage from './Components/LandingPage/LandingPage';
-import Nav from './Components/Nav/Nav';
-import UserProfile from './Components/User/UserProfile';
-import UserPreference from './Components/User/UserPreference';
-import UserContact from './Components/User/UserContact';
+import LandingPage from './Containers/LandingPage/LandingPage';
+import Nav from './Containers/Nav/Nav';
+import UserProfile from './Containers/User/UserProfile';
+import UserPreference from './Containers/User/UserPreference';
+import UserContact from './Containers/User/UserContact';
 
 function App() {
   const uid = 1;
