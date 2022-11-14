@@ -16,7 +16,7 @@ function App() {
           <Route exact path="/" element={<LandingPage/>}/>
         </Routes>
         <Routes>
-          <Route exact path="/userprofile" element={<UserProfile/>}/>
+          <Route exact path="/userprofile" element={<UserProfile uid={1}/>}/>
         </Routes>
         <Routes>
           <Route exact path="/userpreference" element={<UserPreference/>}/>
