@@ -3,6 +3,7 @@ import Sidebar from "../UserSidebar/Sidebar";
 import { UserData } from "../../Assets/UserData";
 import Avatar from "@mui/material/Avatar";
 import "./User.css";
+import { getUser } from "../../utils/api";
 
 function UserProfile() {
   return (
@@ -17,7 +18,7 @@ function UserProfile() {
           />
           <div className="mt-1 font-normal text-lg flex ml-8">
             <p className="p-1 font-medium text-gray-900">User Name: </p>
-            <p className="hover:text-gray-900 p-1"> {UserData[0].username}</p>
+            <p className="hover:text-gray-900 p-1"> {getUser(1)}</p>
           </div>
           <div className="mt-1 font-normal text-lg flex ml-8">
             <p className="p-1 font-medium text-gray-900">User ID: </p>
