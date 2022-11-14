@@ -1,7 +1,6 @@
 import React from "react";
 import { useState } from "react";
 import Sidebar from "../UserSidebar/Sidebar";
-import { UserPreferenceData } from "../../Assets/UserPreferenceData";
 import "./User.css";
 
 function UserPreference() {
@@ -22,8 +21,8 @@ function UserPreference() {
     <div>
       <Sidebar />
       <ul className="mainText">
-        <li> Sleeping Time: {UserPreferenceData[0].sleepingTime} </li>
-        <li> Wakeup Time: {UserPreferenceData[0].wakeupTime} </li>
+        {/* <li> Sleeping Time: {UserPreferenceData[0].sleepingTime} </li>
+        <li> Wakeup Time: {UserPreferenceData[0].wakeupTime} </li> */}
       </ul>
 
       {/* <form onSubmit={handleSubmit}>
