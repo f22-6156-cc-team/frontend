@@ -1,11 +1,48 @@
-import React from "react";
+import React, { useState } from "react";
 import Sidebar from "../UserSidebar/Sidebar";
 import { UserData } from "../../Assets/UserData";
 import Avatar from "@mui/material/Avatar";
 import "./User.css";
 import { getUser } from "../../utils/api";
+import { useEffect } from "react";
+import axios from "axios";
 
-function UserProfile() {
+function UserProfile(props) {
+  const [userProfile, setUserProfile] = useState(null);
+  useEffect( ()=> {
+    // it's probably better to use effect to invoke data fetching at the component layer
+    // source: react official doc && my exp
+    // TODO 
+    // 1. refactor userprofile to take in ID as part of props
+    // 2. extract the api url to env variable
+    // 3. the layout looks really bad rn :/
+    async function fetchData() {
+      try {
+        const rsp = await axios.get("https://gy8a0m85ci.execute-api.us-east-1.amazonaws.com/test/user/1");
+        console.log(rsp.data)
+        setUserProfile(rsp.data);
+      } catch(err) {
+        console.log(err)
+      }
+    }
+    fetchData();
+  }, userProfile);
+  
+  // TODO: better create another component for this? im just lazy af.
+  const item = (field, value) => ( 
+    <div className="mt-1 font-normal text-lg flex ml-8">
+    <p className="p-1 font-medium text-gray-900"> {field} </p>
+    <p className="hover:text-gray-900 p-1"> {value}</p>
+    </div>)
+  
+  const profile = ( userProfile &&
+    <div>
+      {item("Username", userProfile.username)}
+      {item("User ID", userProfile.userId)}
+      {item("First Name", userProfile.firstName)}
+      {item("Last Name", userProfile.lastName)}
+  </div>
+  )
   return (
     <div className="flex">
       <Sidebar />
@@ -16,22 +53,7 @@ function UserProfile() {
             alt="Remy Sharp"
             src="avator.png"
           />
-          <div className="mt-1 font-normal text-lg flex ml-8">
-            <p className="p-1 font-medium text-gray-900">User Name: </p>
-            <p className="hover:text-gray-900 p-1"> {getUser(1)}</p>
-          </div>
-          <div className="mt-1 font-normal text-lg flex ml-8">
-            <p className="p-1 font-medium text-gray-900">User ID: </p>
-            <p className="hover:text-gray-900 p-1"> {UserData[0].userId}</p>
-          </div>
-          <div className="mt-1 font-normal text-lg flex ml-8">
-            <p className="p-1 font-medium text-gray-900">First Name: </p>
-            <p className="hover:text-gray-900 p-1"> Admin</p>
-          </div>
-          <div className="mt-1 font-normal text-lg flex ml-8">
-            <p className="p-1 font-medium text-gray-900">Last Name: </p>
-            <p className="hover:text-gray-900 p-1"> Admin</p>
-          </div>
+          {profile}
         </div>
       </div>
     </div>
