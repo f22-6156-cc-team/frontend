@@ -4,8 +4,13 @@ import Avatar from "@mui/material/Avatar";
 import "./User.css";
 import { useEffect } from "react";
 import axios from "axios";
+import {
+  useParams
+} from "react-router-dom";
 
-const UserProfile = (props) => {
+const UserProfile = () => {
+  // const uid = this.props.match.params.uid;
+  const { uid } = useParams();
   const [userProfile, setUserProfile] = useState(null);
   
   useEffect( ()=> {
@@ -19,7 +24,7 @@ const UserProfile = (props) => {
         }
       }
     }
-    fetchUserData(props.uid);
+    fetchUserData(uid);
   }, [userProfile]);
   
   // TODO: better create another component for this? im just lazy af.

@@ -5,32 +5,36 @@ import Typography from '@mui/material/Typography';
 import { Button } from '@mui/material';
 import {useNavigate} from 'react-router-dom';
 
-const Listing = ({ listingData }) => {
-
-    const userId = listingData.authorUserId;
+const Listing = (props) => {
+    const data = props.listingData;
+    const userId = data.authorUserId;
     const navigate = useNavigate();
     const navigateToUser = () => {
         navigate('/user/'+userId+'/contact');
     };
-
+    const cardContent = ( data &&
+        <div>
+            <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                {data.listingName}
+            </Typography>
+            <Typography variant="h5" component="div">
+                {data.locationArea}
+            </Typography>
+            <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                {data.listingAddress}
+            </Typography>
+            <Typography variant="body2">
+                {data.isActive}
+            </Typography>
+            <Button variant="outlined" onClick={navigateToUser}>
+                Contact listing owner
+            </Button>
+        </div>
+    )
     return (
-        <Card classNam="card">
+        <Card className="card">
             <CardContent>
-                <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                    {listingData.listingName}
-                </Typography>
-                <Typography variant="h5" component="div">
-                    {listingData.locationArea}
-                </Typography>
-                <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                    {listingData.listingAddress}
-                </Typography>
-                <Typography variant="body2">
-                    {listingData.isActive}
-                </Typography>
-                <Button variant="outlined" onClick={navigateToUser}>
-                    Contact listing owner
-                </Button>
+                {cardContent}
             </CardContent>
         </Card>
     );
