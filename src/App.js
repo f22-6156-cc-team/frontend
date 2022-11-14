@@ -8,21 +8,23 @@ import UserPreference from './Components/User/UserPreference';
 import UserContact from './Components/User/UserContact';
 
 function App() {
+  const uid = 1;
+
   return (
     <div className="App">
-      <Nav/>
+      <Nav uid={uid}/>
       <Router>
         <Routes>
-          <Route exact path="/" element={<LandingPage/>}/>
+          <Route path="/" element={<LandingPage/>}/>
         </Routes>
         <Routes>
-          <Route exact path="/userprofile" element={<UserProfile uid={1}/>}/>
+          <Route path="/userprofile/:uid" element={<UserProfile/>}/>
         </Routes>
         <Routes>
           <Route exact path="/userpreference" element={<UserPreference/>}/>
         </Routes>
         <Routes>
-          <Route exact path="/usercontact" element={<UserContact/>}/>
+          <Route exact path="/user/:uid/contact" element={<UserContact/>}/>
         </Routes>
       </Router>
     </div>

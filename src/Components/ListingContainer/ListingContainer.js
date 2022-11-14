@@ -6,8 +6,9 @@ export default function ListingContainer( {listingsData} ) {
   
     return (
         <div className="container">
-            {listingsData.map((listingData, index) => (
-                <Listing listingData={listingData} key={listingData.listingId} />
+    {/* {console.log(listingsData)} */}
+            {listingsData && listingsData.map((listing, index) => (
+                <Listing listingData={listing} key={listing.listingId} />
             ))}
         </div>
     );

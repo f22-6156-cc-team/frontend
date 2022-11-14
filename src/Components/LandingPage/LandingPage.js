@@ -1,28 +1,24 @@
-import React from 'react'
+import React, { useEffect, useState }  from 'react'
 import ListingContainer from '../ListingContainer/ListingContainer';
 import Box from '@mui/material/Box';
-import { ListingContainerData } from '../../Assets/ListingContainerData';
+import axios from "axios";
 
-function LandingPage() {
 
-    const listingsData = ListingContainerData;
+const LandingPage = () => {
 
-    // const [listingsData, setListingsData] = useState([]);
-    // useEffect(async () => {
-    //     // get all listing data
-    //     let json;
-    //     try {
-    //         const response = await fetch('/listings');
-    //         const json = await response.json();
-    //     } catch (error) {
-    //         console.log(error);
-    //         json = [];
-    //     }
-    //     setListingsData(json);
-    //     // const res = response.json();
-    //     // res.then(data => setCurrentTime(data.time));
-    // }, []);
-
+  const [listingsData, setListingsData] = useState(null);
+  useEffect( ()=> {
+    async function fetchListingsData() {
+      try {
+        const rsp = await axios.get(`https://gy8a0m85ci.execute-api.us-east-1.amazonaws.com/test/listings`);
+        setListingsData(rsp.data);
+        console.log(rsp.data);
+      } catch(err) {
+        console.log(err)
+      }
+    }
+    fetchListingsData();
+  }, []);
 
   return (
     <div>
