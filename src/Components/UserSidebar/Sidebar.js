@@ -2,12 +2,37 @@ import React from "react";
 
 import { SidebarData } from "./SidebarData.js";
 import "./Sidebar.css";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import RoomPreferencesIcon from "@mui/icons-material/RoomPreferences";
+import ContactPhoneIcon from "@mui/icons-material/ContactPhone";
 
-function Sidebar() {
+const item = (path, icon, title) => (
+  <li key={1} 
+      className="row" 
+      id={"active"}
+      onClick={() => (window.location.pathname = path)}>
+    <div id="iconContainer">{icon}</div>
+    <div id="titleContainer">
+      <h3>{title}</h3>
+    </div>
+  </li>
+)
+
+function Sidebar(props) {
+  const uid = props.uid;
+
+
+const items = (
+  <div>
+     {item(`/user/${uid}/contact`, <ContactPhoneIcon />, "Contact")}
+  </div>
+);
+
   return (
     <div style={{ width: 250 }}>
       <ul className="sidebarRows">
-        {SidebarData.map((val, key) => {
+        {items}
+        {/* {SidebarData.map((val, key) => {
           return (
             <li
               key={key}
@@ -22,7 +47,7 @@ function Sidebar() {
               </div>
             </li>
           );
-        })}
+        })} */}
       </ul>
       {/* <hr /> */}
     </div>

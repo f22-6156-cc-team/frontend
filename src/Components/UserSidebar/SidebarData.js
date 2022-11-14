@@ -16,7 +16,7 @@ export const SidebarData = [
   },
   {
     title: "Contact",
-    path: "/usercontact",
+    // path: `/user/${uid}/contact`,
     icon: <ContactPhoneIcon />,
   },
 ];
