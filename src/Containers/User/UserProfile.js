@@ -49,7 +49,7 @@ const UserProfile = () => {
   )
   return (
     <div className="flex">
-    {userProfile && <Sidebar uid={userProfile.userId}/>}
+    {userProfile && <Sidebar uid={userProfile?.userId}/>}
       <div className="text-gray-500 flex-1 flex flex-col items-center">
         <div className="flex flex-col place-items-stretch">          
           {profile}

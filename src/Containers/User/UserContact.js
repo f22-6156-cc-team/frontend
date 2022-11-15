@@ -29,7 +29,7 @@ function UserContact(props) {
     </div>
   );
 
-  const email = userContactData.emails[0].address;
+  const email = userContactData?.emails[0]?.address;
 
   return (
     <div>
