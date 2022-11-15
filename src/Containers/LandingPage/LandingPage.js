@@ -1,6 +1,7 @@
 import React, { useEffect, useState }  from 'react'
 import ListingContainer from '../ListingContainer/ListingContainer';
-import Pagination from '@mui/material/Pagination';
+import ReactPaginate from "react-paginate";
+import Grid from '@mui/material/Grid'
 import axios from "axios";
 import './LandingPage.css';
 
@@ -22,35 +23,37 @@ const LandingPage = () => {
     fetchListingsData();
   }, []);
 
-  const [currPage, setCurrPage] = useState(1);
-  const [currentPageData, setcurrentPageData] = useState(null);
-  const pageNum = Math.ceil(listingsData?.length/LISTINGS_PER_PAGE);
-  
-  useEffect( ()=> {
-    const start = (currPage - 1) * LISTINGS_PER_PAGE;
-    const end = start + LISTINGS_PER_PAGE;
-    setcurrentPageData(listingsData?.slice(start, end));
-  }, [currPage]);
+  const [currPage, setCurrPage] = useState(0);
+  const start = currPage * LISTINGS_PER_PAGE;
+  const end = start + LISTINGS_PER_PAGE;
+  const currentPageData = listingsData?.slice(start, end);
+  const pageCount = Math.ceil(listingsData?.length/LISTINGS_PER_PAGE);
 
-  const handleChange = (event, value) => {
-    setCurrPage(value);
+  function handlePageClick({ selected: selectedPage }) {
+    setCurrPage(selectedPage); 
   };
-
  
   return (    
-    <div className='container'>
-        <div className='listings'>
-          <ListingContainer listingsData={currentPageData}/>
-        </div>
-        <div className='pagination'>
-          <Pagination count={pageNum} 
-                      color="primary" 
-                      defaultPage={1} 
-                      page={currPage} 
-                      boundaryCount={2} 
-                      onChange={handleChange}/>
-        </div>
-    </div>
+      <Grid container className='container'>
+        <Grid item container direction="row">
+          <Grid item xs={12} sm={6} className='listings'>
+              <ListingContainer listingsData={currentPageData}/>
+          </Grid>
+          <Grid item xs={12} sm={6} className='pagination'>
+                <ReactPaginate breakLabel="..."
+                              nextLabel={">"}
+                              onPageChange={handlePageClick}
+                              pageRangeDisplayed={5}
+                              pageCount={pageCount}
+                              previousLabel={"<"}
+                              containerClassName={"pagination"}
+                              previousLinkClassName={"pagination__link"}
+                              nextLinkClassName={"pagination__link"}
+                              disabledClassName={"pagination__link--disabled"}
+                              activeClassName={"pagination__link--active"}/>
+          </Grid>
+        </Grid>
+    </Grid>
   );
 }
 

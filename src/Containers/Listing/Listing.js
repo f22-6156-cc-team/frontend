@@ -12,51 +12,49 @@ const Listing = (props) => {
         navigate('/user/'+userId+'/contact');
     };
 
-    const displayListing = () => {
-        const active = data.isActive ? "yes" : "no";
-        const elevator = data.hasElevator ? "yes" : "no";
-        const pet = data.isPetFriendly ? "yes" : "no";
-        const smoking = data.isSmokingFriendly ? "yes" : "no";
-        const maintenance = data.hasMaintenance ? "yes" : "no";
-        const gym = data.hasGym ? "yes" : "no";
-      return (
+    const listingDetails = (
         <div>
-          <h2>Listing: {data.listingName}</h2>
-          <h2>Location: {data.locationArea}</h2>
-          <h3>Address: {data.listingAddress}</h3>
-          <h3>Start date: {data.startDate}</h3>
-          <h3>End date: {data.endDate}</h3>
-          <h3>Other information and preferences:</h3>
-          <h4>Apartment size: {data.listingTotalSize} Room size: {data.listingSize}</h4>
-          <h4>Floor: {data.floor}</h4>
-          <h4>In-building elevator: {elevator}</h4>
-          <h4>In-building maintenance: {maintenance}</h4>
-          <h4>Dryer washer location: {data.dryerWasherLocation}</h4>
-          <h4>Gym: {gym}</h4>
-          <h4>Pet: {pet}</h4>
-          <h4>Smoking: {smoking}</h4>
-          <h4>Listing active: {active}</h4>
-          <h4></h4>
+          <h3>{data?.listingName}</h3>
+          <h4>
+            <p>
+                Location: {data?.locationArea}<br></br>
+                Address: {data?.listingAddress}<br></br>
+                Start date: {data?.startDate}<br></br>
+                End date: {data?.endDate}<br></br>
+            </p>
+          </h4>
+          <h4>-------Other information and preferences-------</h4>
+          <p>
+            Apartment size: {data?.listingTotalSize} Room size: {data?.listingSize}<br></br>
+            Floor: {data?.floor}<br></br>
+            In-building elevator: {data?.hasElevator ? "yes" : "no"}<br></br>
+            In-building maintenance: {data?.hasMaintenance ? "yes" : "no"}<br></br>
+            Dryer washer location: {data?.dryerWasherLocation}<br></br>
+            Gym: {data?.hasGym ? "yes" : "no"}<br></br>
+            Pet: {data?.isPetFriendly ? "yes" : "no"}<br></br>
+            Smoking: {data?.isSmokingFriendly ? "yes" : "no"}<br></br>
+            Listing active: {data?.isActive ? "yes" : "no"}<br></br>
+          </p>
         </div>
-      );
-    };
+    )
 
     const cardContent = ( data &&
         <div>
-            {displayListing}
+            {listingDetails}
             <Button variant="outlined" onClick={navigateToUser}>
                 Contact listing owner
             </Button>
         </div>
     )
+
     return (
         <Card className="card">
+            {console.log("card", data)}
             <CardContent>
                 {cardContent}
             </CardContent>
         </Card>
     );
 };
-
 
 export default Listing;
