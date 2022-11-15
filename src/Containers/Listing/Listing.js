@@ -20,7 +20,7 @@ const Listing = (props) => {
         const maintenance = data.hasMaintenance ? "yes" : "no";
         const gym = data.hasGym ? "yes" : "no";
       return (
-        <div className="listing">
+        <div>
           <h2>Listing: {data.listingName}</h2>
           <h2>Location: {data.locationArea}</h2>
           <h3>Address: {data.listingAddress}</h3>
