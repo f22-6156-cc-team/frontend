@@ -23,7 +23,7 @@ const Listing = (props) => {
                 End date: {data?.endDate}<br></br>
             </p>
           </h4>
-          <h4>-------Other information and preferences-------</h4>
+          {/* <h4>-------Other information and preferences-------</h4>
           <p>
             Apartment size: {data?.listingTotalSize} Room size: {data?.listingSize}<br></br>
             Floor: {data?.floor}<br></br>
@@ -34,7 +34,7 @@ const Listing = (props) => {
             Pet: {data?.isPetFriendly ? "yes" : "no"}<br></br>
             Smoking: {data?.isSmokingFriendly ? "yes" : "no"}<br></br>
             Listing active: {data?.isActive ? "yes" : "no"}<br></br>
-          </p>
+          </p> */}
         </div>
     )
 
@@ -49,7 +49,6 @@ const Listing = (props) => {
 
     return (
         <Card className="card">
-            {console.log("card", data)}
             <CardContent>
                 {cardContent}
             </CardContent>

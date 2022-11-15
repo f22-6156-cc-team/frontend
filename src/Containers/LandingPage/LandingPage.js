@@ -34,11 +34,13 @@ const LandingPage = () => {
   };
  
   return (    
-      <Grid container className='container'>
-        <Grid item container direction="row">
-          <Grid item xs={12} sm={6} className='listings'>
+      <Grid container spacing={2}>
+        <Grid item container direction="col" justify="flex" xs={12}>
+          <Grid item xs={12} sm={12} justify="center">
               <ListingContainer listingsData={currentPageData}/>
           </Grid>
+        </Grid>
+        <Grid item container direction="col">
           <Grid item xs={12} sm={6} className='pagination'>
                 <ReactPaginate breakLabel="..."
                               nextLabel={">"}
