@@ -30,8 +30,8 @@ const UserProfile = () => {
   // TODO: better create another component for this? im just lazy af.
   const item = (field, value) => ( 
     <div className="mt-1 font-normal text-lg flex ml-8">
-    <p className="p-1 font-medium text-gray-900"> {field} </p>
-    <p className="hover:text-gray-900 p-1"> {value}</p>
+    <span className="p-1 font-medium text-gray-900"> {field} </span>
+    <span className="hover:text-gray-900 p-1"> {value} </span>
     </div>)
   
   const profile = ( userProfile &&
@@ -41,10 +41,10 @@ const UserProfile = () => {
             alt="Remy Sharp"
             src="avator.png"
       />
-      {item("Username", userProfile.username)}
-      {item("User ID", userProfile.userId)}
-      {item("First Name", userProfile.firstName)}
-      {item("Last Name", userProfile.lastName)}
+      {item("Username: ", userProfile.username)}
+      {item("User ID: ", userProfile.userId)}
+      {item("First Name: ", userProfile.firstName)}
+      {item("Last Name: ", userProfile.lastName)}
   </div>
   )
   return (

@@ -21,10 +21,10 @@ function App() {
           <Route path="/userprofile/:uid" element={<UserProfile/>}/>
         </Routes>
         <Routes>
-          <Route exact path="/userpreference" element={<UserPreference/>}/>
+          <Route exact path="/userpreference/:uid" element={<UserPreference/>}/>
         </Routes>
         <Routes>
-          <Route exact path="/user/:uid/contact" element={<UserContact/>}/>
+          <Route exact path="/usercontact/:uid" element={<UserContact/>}/>
         </Routes>
       </Router>
     </div>
