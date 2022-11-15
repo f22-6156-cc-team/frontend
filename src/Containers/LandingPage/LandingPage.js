@@ -1,8 +1,10 @@
 import React, { useEffect, useState }  from 'react'
 import ListingContainer from '../ListingContainer/ListingContainer';
-import Box from '@mui/material/Box';
+import Pagination from '@mui/material/Pagination';
 import axios from "axios";
+import './LandingPage.css';
 
+const LISTINGS_PER_PAGE = 3;
 
 const LandingPage = () => {
 
@@ -20,19 +22,35 @@ const LandingPage = () => {
     fetchListingsData();
   }, []);
 
-  return (
-    <div>
-      <Box sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          p: 1,
-          m: 1,
-          bgcolor: 'background.paper',
-          borderRadius: 1,
-        }}>
-        <ListingContainer listingsData={listingsData}/>
-      </Box>
-      
+  const [currPage, setCurrPage] = useState(1);
+  const [currentPageData, setcurrentPageData] = useState(null);
+  const totalListings = listingsData?.length;
+  const pageNum = Math.ceil(totalListings/LISTINGS_PER_PAGE);
+  
+  useEffect( ()=> {
+    const start = (currPage - 1) * LISTINGS_PER_PAGE;
+    const end = start + LISTINGS_PER_PAGE;
+    setcurrentPageData(listingsData?.slice(start, end));
+  }, [currPage]);
+
+  const handleChange = (event, value) => {
+    setCurrPage(value);
+  };
+
+ 
+  return (    
+    <div className='container'>
+        <div className='listings'>
+          <ListingContainer listingsData={currentPageData}/>
+        </div>
+        <div className='pagination'>
+          <Pagination count={pageNum} 
+                      color="primary" 
+                      defaultPage={1} 
+                      page={currPage} 
+                      boundaryCount={2} 
+                      onChange={handleChange}/>
+        </div>
     </div>
   );
 }
