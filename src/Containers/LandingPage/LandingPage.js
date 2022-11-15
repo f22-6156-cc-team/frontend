@@ -24,8 +24,7 @@ const LandingPage = () => {
 
   const [currPage, setCurrPage] = useState(1);
   const [currentPageData, setcurrentPageData] = useState(null);
-  const totalListings = listingsData?.length;
-  const pageNum = Math.ceil(totalListings/LISTINGS_PER_PAGE);
+  const pageNum = Math.ceil(listingsData?.length/LISTINGS_PER_PAGE);
   
   useEffect( ()=> {
     const start = (currPage - 1) * LISTINGS_PER_PAGE;
