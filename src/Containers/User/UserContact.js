@@ -24,12 +24,13 @@ function UserContact(props) {
 
   const item = (key, val) => (
     <div className="mt-1 font-normal text-lg flex ml-8">
-      <p className="p-1 font-medium text-gray-900">{key} : </p>
-      <p className="hover:text-gray-900 p-1"> {val}</p>
+      <span className="p-1 font-medium text-gray-900">{key} : </span>
+      <span className="hover:text-gray-900 p-1"> {val}</span>
     </div>
   );
 
   const email = userContactData?.emails[0]?.address;
+  const phone = userContactData?.phones[0]?.number;
 
   return (
     <div>
@@ -37,6 +38,7 @@ function UserContact(props) {
       <div className="text-gray-500 flex-1 flex flex-col items-center">
         <div className="flex flex-col place-items-stretch">
           {item("Email", email)}
+          {item("Phone", phone)}
         </div>
       </div>
     </div>

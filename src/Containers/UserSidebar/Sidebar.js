@@ -5,12 +5,16 @@ import "./Sidebar.css";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import RoomPreferencesIcon from "@mui/icons-material/RoomPreferences";
 import ContactPhoneIcon from "@mui/icons-material/ContactPhone";
+import {
+  useParams
+} from "react-router-dom";
 
 const item = (path, icon, title) => (
   <li key={1} 
       className="row" 
-      id={"active"}
-      onClick={() => (window.location.pathname = path)}>
+      id={path === window.location.pathname ? "active" : ""}
+      onClick={() => (window.location.pathname = path)}
+  >
     <div id="iconContainer">{icon}</div>
     <div id="titleContainer">
       <h3>{title}</h3>
@@ -19,12 +23,14 @@ const item = (path, icon, title) => (
 )
 
 function Sidebar(props) {
-  const uid = props.uid;
+  const { uid } = useParams();
 
 
 const items = (
   <div>
-     {item(`/user/${uid}/contact`, <ContactPhoneIcon />, "Contact")}
+    {item(`/userprofile/${uid}`, <AccountCircleIcon />, "Profile")}
+    {item(`/userpreference/${uid}`, <RoomPreferencesIcon />, "Preference")}
+    {item(`/usercontact/${uid}`, <ContactPhoneIcon />, "Contact")}
   </div>
 );
 
@@ -49,7 +55,7 @@ const items = (
           );
         })} */}
       </ul>
-      {/* <hr /> */}
+      <hr />
     </div>
   );
 }

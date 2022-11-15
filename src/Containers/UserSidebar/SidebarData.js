@@ -6,7 +6,7 @@ import ContactPhoneIcon from "@mui/icons-material/ContactPhone";
 export const SidebarData = [
   {
     title: "Profile",
-    path: "/userprofile",
+    path: "`/userprofile/${uid}`",
     icon: <AccountCircleIcon />,
   },
   {
