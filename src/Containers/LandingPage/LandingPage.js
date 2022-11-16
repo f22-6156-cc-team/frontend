@@ -15,7 +15,6 @@ const LandingPage = () => {
       try {
         const rsp = await axios.get(`https://gy8a0m85ci.execute-api.us-east-1.amazonaws.com/test/listings`);
         setListingsData(rsp.data);
-        console.log(rsp.data);
       } catch(err) {
         console.log(err)
       }
@@ -35,12 +34,12 @@ const LandingPage = () => {
  
   return (    
       <Grid container spacing={2}>
-        <Grid item container direction="col" justify="flex" xs={12}>
+        <Grid item container justify="flex" xs={12}>
           <Grid item xs={12} sm={12} justify="center">
               <ListingContainer listingsData={currentPageData}/>
           </Grid>
         </Grid>
-        <Grid item container direction="col">
+        <Grid item container>
           <Grid item xs={12} sm={6} className='pagination'>
                 <ReactPaginate breakLabel="..."
                               nextLabel={">"}

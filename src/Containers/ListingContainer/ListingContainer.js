@@ -8,7 +8,7 @@ export default function ListingContainer( {listingsData} ) {
         <div style={{ padding: 30 }}>
 
             {listingsData && listingsData.map((listing, index) => (
-                <Grid container spacing={10} justify="center">
+                <Grid key={listing.listingId} container spacing={10} justify="center">
                     <Grid item xs={12} justify="center">
                         <Listing listingData={listing} key={listing.listingId} />
                     </Grid>
