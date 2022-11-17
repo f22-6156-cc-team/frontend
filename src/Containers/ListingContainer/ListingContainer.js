@@ -1,14 +1,18 @@
 import * as React from 'react';
+import Grid from '@mui/material/Grid'
 import Listing from '../Listing/Listing';
 
 
 export default function ListingContainer( {listingsData} ) {
-  
     return (
-        <div className="container">
-    {/* {console.log(listingsData)} */}
+        <div style={{ padding: 30 }}>
+
             {listingsData && listingsData.map((listing, index) => (
-                <Listing listingData={listing} key={listing.listingId} />
+                <Grid key={listing.listingId} container spacing={10} justify="center">
+                    <Grid item xs={12} justify="center">
+                        <Listing listingData={listing} key={listing.listingId} />
+                    </Grid>
+                </Grid>
             ))}
         </div>
     );
