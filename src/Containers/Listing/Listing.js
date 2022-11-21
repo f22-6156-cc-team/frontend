@@ -9,7 +9,7 @@ const Listing = (props) => {
     const userId = data.authorUserId;
     const navigate = useNavigate();
     const navigateToUser = () => {
-        navigate('/user/'+userId+'/contact');
+        navigate('/usercontact/'+userId);
     };
 
     const listingDetails = (

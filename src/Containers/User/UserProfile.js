@@ -1,20 +1,19 @@
 import React, { useState } from "react";
 import Sidebar from "../UserSidebar/Sidebar";
+import Button from "@mui/material/Button";
 import Avatar from "@mui/material/Avatar";
 import "./User.css";
 import { useEffect } from "react";
 import axios from "axios";
-import {
-  useParams
-} from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 const UserProfile = () => {
-  // const uid = this.props.match.params.uid;
   const { uid } = useParams();
   const [userProfile, setUserProfile] = useState(null);
-  
+  const navigate = useNavigate();
+
   useEffect( ()=> {
-    async function fetchUserData(uid) {
+    async function fetchUserData() {
       if (uid) {
         try {
           const rsp = await axios.get(`https://gy8a0m85ci.execute-api.us-east-1.amazonaws.com/test/user/${uid}`);
@@ -24,8 +23,8 @@ const UserProfile = () => {
         }
       }
     }
-    fetchUserData(uid);
-  }, [userProfile]);
+    fetchUserData();
+  }, []);
   
   // TODO: better create another component for this? im just lazy af.
   const item = (field, value) => ( 
@@ -36,25 +35,32 @@ const UserProfile = () => {
   
   const profile = ( userProfile &&
     <div>
-      <Avatar
+      {/* <Avatar
             className="w-64 h-64 mt-32 mb-16"
             alt="Remy Sharp"
             src="avator.png"
-      />
+      /> */}
       {item("Username: ", userProfile.username)}
       {item("User ID: ", userProfile.userId)}
       {item("First Name: ", userProfile.firstName)}
       {item("Last Name: ", userProfile.lastName)}
-  </div>
+    </div>
   )
+
+  const editButton = <Button onClick={()=>{toEdit()}} color="inherit"> Edit </Button>;
+  //Sending required data for updating email and phone to edit page
+  const toEdit=()=>{ navigate(`/userprofile/${uid}/edit`,
+  {state:{ username: userProfile.username }}); }
+
   return (
     <div className="flex">
-    {userProfile && <Sidebar uid={userProfile?.userId}/>}
+      {userProfile && <Sidebar uid={userProfile?.userId}/>}
       <div className="text-gray-500 flex-1 flex flex-col items-center">
         <div className="flex flex-col place-items-stretch">          
           {profile}
         </div>
       </div>
+      {editButton}
     </div>
   );
 }

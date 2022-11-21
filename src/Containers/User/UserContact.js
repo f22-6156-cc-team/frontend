@@ -1,12 +1,14 @@
 import Sidebar from "../UserSidebar/Sidebar";
 import React, { useEffect, useState } from "react";
+import Button from "@mui/material/Button";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, Link, useNavigate} from "react-router-dom";
 
-function UserContact(props) {
+function UserContact() {
   const { uid } = useParams();
-
   const [userContactData, setUserContactData] = useState(null);
+  const navigate = useNavigate();
+  
   useEffect(() => {
     async function fetchUserContactData() {
       try {
@@ -31,7 +33,18 @@ function UserContact(props) {
 
   const email = userContactData?.emails[0]?.address;
   const phone = userContactData?.phones[0]?.number;
-
+  const editButton = <Button onClick={()=>{toEdit()}} color="inherit"> Edit </Button>;
+  //Sending required data for updating email and phone to edit page
+  const toEdit=()=>{ navigate(`/usercontact/${uid}/edit`,
+  {state:{
+    email: email,
+    emailId: userContactData?.emails[0]?.emailId, 
+    emailType: userContactData?.emails[0]?.emailType, 
+    phone: phone,
+    phoneId: userContactData?.phones[0]?.phoneId,
+    phoneType: userContactData?.phones[0]?.phoneType
+    }}); }
+  
   return (
     <div>
       <Sidebar />
@@ -40,6 +53,7 @@ function UserContact(props) {
           {item("Email", email)}
           {item("Phone", phone)}
         </div>
+        {editButton}
       </div>
     </div>
   );
