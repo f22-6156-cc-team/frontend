@@ -1,13 +1,10 @@
 import React from "react";
 
-import { SidebarData } from "./SidebarData.js";
 import "./Sidebar.css";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import RoomPreferencesIcon from "@mui/icons-material/RoomPreferences";
 import ContactPhoneIcon from "@mui/icons-material/ContactPhone";
-import {
-  useParams
-} from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 const item = (path, icon, title) => (
   <li key={1} 

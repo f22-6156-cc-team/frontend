@@ -6,6 +6,9 @@ import Nav from './Containers/Nav/Nav';
 import UserProfile from './Containers/User/UserProfile';
 import UserPreference from './Containers/User/UserPreference';
 import UserContact from './Containers/User/UserContact';
+import UserProfileEdit from './Containers/User/UserProfileEdit'
+import UserPrefEdit from './Containers/User/UserPrefEdit';
+import UserContactEdit from './Containers/User/UserContactEdit';
 
 function App() {
   const uid = 1;
@@ -25,6 +28,15 @@ function App() {
         </Routes>
         <Routes>
           <Route exact path="/usercontact/:uid" element={<UserContact/>}/>
+        </Routes>
+        <Routes>
+          <Route exact path="/userprofile/:uid/edit" element={<UserProfileEdit/>}/>
+        </Routes>
+        <Routes>
+          <Route exact path="/userpreference/:uid/edit" element={<UserPrefEdit/>}/>
+        </Routes>
+        <Routes>
+          <Route exact path="/usercontact/:uid/edit" element={<UserContactEdit/>}/>
         </Routes>
       </Router>
     </div>

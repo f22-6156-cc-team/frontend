@@ -1,13 +1,16 @@
 import Sidebar from "../UserSidebar/Sidebar";
 import React, { useEffect, useState } from "react";
+import Button from "@mui/material/Button";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import "./User.css";
 
 function UserPreference(props) {
   const { uid } = useParams();
-
   const [userPreferenceData, setUserPreferenceData] = useState(null);
+  const UserPrefEditUrl = `/userpreference/${uid}/edit`;
+  const editButton = <Button href={UserPrefEditUrl} color="inherit"> Edit </Button>
+
   useEffect(() => {
     async function fetchUserPreferenceData() {
       try {
@@ -15,7 +18,6 @@ function UserPreference(props) {
           `https://gy8a0m85ci.execute-api.us-east-1.amazonaws.com/test/user/${uid}/personal_preference`
         );
         setUserPreferenceData(rsp.data);
-        // console.log(rsp.data);
       } catch (err) {
         console.log(err);
       }
@@ -30,18 +32,17 @@ function UserPreference(props) {
     </div>
   );
 
-  const sleepingTime = userPreferenceData?.sleepingTime;
-  const wakeupTime = userPreferenceData?.wakeupTime;
-
   return (
     <div>
       <Sidebar />
       <div className="text-gray-500 flex-1 flex flex-col items-center">
         <div className="flex flex-col place-items-stretch">
-          {item("Sleeping Time: ", sleepingTime)}
-          {item("Wakeup Time: ", wakeupTime)}
+          {(window.preference == undefined) ? '' : (window.preference ? "Successfully Updated" : "Invalid Input")} 
+          {item("Sleeping Time", userPreferenceData?.sleepingTime)}
+          {item("Wakeup Time", userPreferenceData?.wakeupTime)}
         </div>
       </div>
+      {editButton}
     </div>
   );
 }

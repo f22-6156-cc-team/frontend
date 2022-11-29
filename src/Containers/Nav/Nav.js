@@ -10,6 +10,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 export default function ButtonAppBar(props) {
   const uid = props.uid;
   const userProfileUrl = `/userprofile/${uid}`
+  const homeUrl = `/`
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -26,6 +27,9 @@ export default function ButtonAppBar(props) {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             App Name
           </Typography>
+          <Button href={homeUrl} color="inherit">
+            Home
+          </Button>
           <Button href={userProfileUrl} color="inherit">
             User Profile
           </Button>
