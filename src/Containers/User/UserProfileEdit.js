@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 
-
 export default function UserProfileEdit() {
   const { uid } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
   const [value, setValue] = useState(location.state.username);
+  const [notice, setNotice] = useState();
+  const [success, setSuccess] = useState();
+  window.profile = true;
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -19,7 +21,12 @@ export default function UserProfileEdit() {
       body: JSON.stringify(data),
     })
       .then(res => res.json())
-      .then(res => console.log(res));
+      .then(res => {
+        console.log(res);
+      })
+      .catch(error => {
+        window.profile = false;
+    });
     navigate(`/userprofile/${uid}`) ;
   }
 
@@ -27,13 +34,24 @@ export default function UserProfileEdit() {
     setValue(e.target.value);
   }
 
+  const noticeBanner = ( notice && 
+    <>
+    <h2>Error fields: <span>{notice?.errorFields
+?.join()} </span>
+    - {notice?.message} 
+    </h2>
+    </>
+);
+
   return (
-    <section id="app">
+    <div>
+      <section>
       <form action="" onSubmit={handleSubmit}>
         <span> Username: </span>
         <input type="text" onChange={handleValue} placeholder={location.state.username}/>
         <button> Update </button>
       </form>
-    </section>
+      </section>
+    </div>
   )
 }

@@ -33,10 +33,10 @@ function UserContact() {
 
   const email = userContactData?.emails[0]?.address;
   const phone = userContactData?.phones[0]?.number;
-  const editButton = <Button onClick={()=>{toEdit()}} color="inherit"> Edit </Button>;
+  const editButton = <Button onClick={toEdit} color="inherit"> Edit </Button>;
   //Sending required data for updating email and phone to edit page
-  const toEdit=()=>{ navigate(`/usercontact/${uid}/edit`,
-  {state:{
+  function toEdit(){ 
+    navigate(`/usercontact/${uid}/edit`, {state:{
     email: email,
     emailId: userContactData?.emails[0]?.emailId, 
     emailType: userContactData?.emails[0]?.emailType, 
@@ -50,6 +50,7 @@ function UserContact() {
       <Sidebar />
       <div className="text-gray-500 flex-1 flex flex-col items-center">
         <div className="flex flex-col place-items-stretch">
+          {(window.contact == undefined) ? '' : (window.contact ? "Successfully Updated" : "Invalid Input")} 
           {item("Email", email)}
           {item("Phone", phone)}
         </div>

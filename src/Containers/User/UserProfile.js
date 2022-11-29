@@ -26,7 +26,6 @@ const UserProfile = () => {
     fetchUserData();
   }, []);
   
-  // TODO: better create another component for this? im just lazy af.
   const item = (field, value) => ( 
     <div className="mt-1 font-normal text-lg flex ml-8">
     <span className="p-1 font-medium text-gray-900"> {field} </span>
@@ -47,20 +46,22 @@ const UserProfile = () => {
     </div>
   )
 
-  const editButton = <Button onClick={()=>{toEdit()}} color="inherit"> Edit </Button>;
+  const editButton = <Button onClick={toEdit} color="inherit"> Edit </Button>;
   //Sending required data for updating email and phone to edit page
-  const toEdit=()=>{ navigate(`/userprofile/${uid}/edit`,
-  {state:{ username: userProfile.username }}); }
+  function toEdit(){ 
+    navigate(`/userprofile/${uid}/edit`, {state:{ username: userProfile.username }}); 
+  }
 
   return (
     <div className="flex">
       {userProfile && <Sidebar uid={userProfile?.userId}/>}
       <div className="text-gray-500 flex-1 flex flex-col items-center">
-        <div className="flex flex-col place-items-stretch">          
+        <div className="flex flex-col place-items-stretch"> 
+          {(window.profile == undefined) ? '' : (window.profile ? "Successfully Updated" : "Invalid Input")} 
           {profile}
+          {editButton}
         </div>
       </div>
-      {editButton}
     </div>
   );
 }

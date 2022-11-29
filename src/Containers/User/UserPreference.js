@@ -18,7 +18,6 @@ function UserPreference(props) {
           `https://gy8a0m85ci.execute-api.us-east-1.amazonaws.com/test/user/${uid}/personal_preference`
         );
         setUserPreferenceData(rsp.data);
-        // console.log(rsp.data);
       } catch (err) {
         console.log(err);
       }
@@ -38,6 +37,7 @@ function UserPreference(props) {
       <Sidebar />
       <div className="text-gray-500 flex-1 flex flex-col items-center">
         <div className="flex flex-col place-items-stretch">
+          {(window.preference == undefined) ? '' : (window.preference ? "Successfully Updated" : "Invalid Input")} 
           {item("Sleeping Time", userPreferenceData?.sleepingTime)}
           {item("Wakeup Time", userPreferenceData?.wakeupTime)}
         </div>

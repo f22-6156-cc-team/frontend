@@ -1,7 +1,8 @@
+import { render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useState, useEffect} from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-
 
 export default function UserContactEdit() {
   const { uid } = useParams();
@@ -9,6 +10,7 @@ export default function UserContactEdit() {
   const location = useLocation();
   const [email, setEmail] = useState(location.state.email);
   const [phone, setPhone] = useState(location.state.phone);
+  window.contact = true;    
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -24,7 +26,10 @@ export default function UserContactEdit() {
       body: JSON.stringify(emailData),
     })
       .then(res => res.json())
-      .then(res => console.log(res));
+      .then(res => console.log(res))
+      .catch(error => {
+        window.contact = false;    
+    });
 
     fetch(`https://gy8a0m85ci.execute-api.us-east-1.amazonaws.com/test/user/${uid}/contact/phone/${location.state.phoneId}`, {
       method: 'PUT',
@@ -34,8 +39,11 @@ export default function UserContactEdit() {
       body: JSON.stringify(phoneData),
     })
       .then(res => res.json())
-      .then(res => console.log(res));
-    navigate(`/usercontact/${uid}`) ;
+      .then(res => console.log(res))
+      .catch(error => {
+        window.contact = false; 
+    });
+    navigate(`/usercontact/${uid}`);
   }
 
   function handleEmail(e) {
@@ -45,9 +53,9 @@ export default function UserContactEdit() {
   function handlePhone(e) {
     setPhone(e.target.value);
   }
-
+ 
   return (
-    <section id="app">
+    <section>
       <form action="" onSubmit={handleSubmit}>
         <div>
           <span> Email: </span>
