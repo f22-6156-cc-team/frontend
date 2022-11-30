@@ -1,5 +1,4 @@
 import axios from "axios";
-import { useState, useEffect } from "react";
 
 const USER_SERVICE_ENDPOINT =
   "https://gy8a0m85ci.execute-api.us-east-1.amazonaws.com/test";
@@ -20,7 +19,6 @@ export async function getUserProfile(uid) {
     return null;
   }
 }
-
 
 export async function getValidatedAddress(addressLines) {
   if (addressLines) {
