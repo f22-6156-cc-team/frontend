@@ -1,5 +1,17 @@
 import Axios from "axios";
+import { JWT_NAME } from "./const";
 export const request = Axios.create();
+
+// set every request headers with JWT Token
+request.interceptors.request.use((req) => {
+  const JWTToken = localStorage.getItem(JWT_NAME) || '';
+  if (JWTToken) {
+    req.headers = {
+      Authorization: `Bearer ${JWTToken}`,
+    };
+  }
+  return req;
+});
 
 /**
  * API Endpoints

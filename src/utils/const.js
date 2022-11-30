@@ -1,0 +1,1 @@
+export const JWT_NAME = 'cc:auth';

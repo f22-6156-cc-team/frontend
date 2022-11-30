@@ -6,14 +6,19 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
-import { useSetRecoilState } from "recoil";
-import { modalAtom } from "../../utils/store";
+import { useSetRecoilState, useRecoilState } from "recoil";
+import { modalAtom, userAtom } from "../../utils/store";
+import { GoogleLogin } from "@react-oauth/google";
+import { JWT_NAME } from "../../utils/const";
+import { login } from "../../utils/login";
 
 export default function ButtonAppBar(props) {
   const uid = props.uid;
   const userProfileUrl = `/userprofile/${uid}`;
   const homeUrl = `/`;
   const setModalAtom = useSetRecoilState(modalAtom);
+  const [userState, setUserState] = useRecoilState(userAtom);
+  console.log("userState", userState);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -46,9 +51,22 @@ export default function ButtonAppBar(props) {
           <Button href={homeUrl} color="inherit">
             Home
           </Button>
-          <Button href={userProfileUrl} color="inherit">
-            User Profile
-          </Button>
+          {userState.hasLogined ? (
+            <Button href={userProfileUrl} color="inherit">
+              {userState.name}
+            </Button>
+          ) : (
+            <GoogleLogin
+              onSuccess={(credentialResponse) => {
+                console.log(credentialResponse);
+                localStorage.setItem(JWT_NAME, credentialResponse.credential);
+                login(setUserState);
+              }}
+              onError={() => {
+                console.log("Login Failed");
+              }}
+            />
+          )}
         </Toolbar>
       </AppBar>
     </Box>
