@@ -4,6 +4,7 @@ import ReactPaginate from "react-paginate";
 import Grid from '@mui/material/Grid'
 import axios from "axios";
 import './LandingPage.css';
+import AddressVerifier from '../AddressVerifier/AddressVerifier';
 
 const LISTINGS_PER_PAGE = 3;
 
@@ -52,6 +53,11 @@ const LandingPage = () => {
                               nextLinkClassName={"pagination__link"}
                               disabledClassName={"pagination__link--disabled"}
                               activeClassName={"pagination__link--active"}/>
+          </Grid>
+        </Grid>
+        <Grid item container justify="flex" xs={12}>
+          <Grid item xs={12} sm={12} justify="center" className='verifier'>
+            <AddressVerifier/>
           </Grid>
         </Grid>
     </Grid>
