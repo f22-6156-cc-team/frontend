@@ -1,7 +1,6 @@
 import { Container } from "postcss";
 import React, { useState, optionsState } from "react";
 import { useParams, useNavigate, Form } from "react-router-dom";
-import NoticeBanner from "../NoticeBanner";
 import { Button } from "@mui/material";
 
 export default function UserPrefEdit() {
