@@ -6,11 +6,15 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
+import { useSetRecoilState } from "recoil";
+import { modalAtom } from "../../utils/store";
 
 export default function ButtonAppBar(props) {
   const uid = props.uid;
-  const userProfileUrl = `/userprofile/${uid}`
-  const homeUrl = `/`
+  const userProfileUrl = `/userprofile/${uid}`;
+  const homeUrl = `/`;
+  const setModalAtom = useSetRecoilState(modalAtom);
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -27,6 +31,18 @@ export default function ButtonAppBar(props) {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             App Name
           </Typography>
+          <Button
+            color="success"
+            variant="contained"
+            className="mr-2"
+            onClick={() => {
+              setModalAtom({
+                isUploadModalOpen: true,
+              });
+            }}
+          >
+            Upload
+          </Button>
           <Button href={homeUrl} color="inherit">
             Home
           </Button>
