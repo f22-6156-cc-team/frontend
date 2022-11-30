@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useState, useEffect } from "react";
 
 const USER_SERVICE_ENDPOINT =
   "https://gy8a0m85ci.execute-api.us-east-1.amazonaws.com/test";
@@ -20,9 +21,10 @@ export async function getUserProfile(uid) {
   }
 }
 
+
 export async function getValidatedAddress(addressLines) {
   if (addressLines) {
-    const data = await fetch(`${GOOGLE_PLACES_API}`, {
+    fetch(`${GOOGLE_PLACES_API}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -33,10 +35,12 @@ export async function getValidatedAddress(addressLines) {
         }
       })  
     })
-    .then((res) => res.json())
-    .then((res)=> {
-      console.log(res);
-    })
+    .then((res) => res.json()) 
   }
   return null;
+};
+
+export async function exportData(addressLines) {
+  const res = await getValidatedAddress(addressLines);
+  return res;
 }
