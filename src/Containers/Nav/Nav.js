@@ -18,7 +18,6 @@ export default function ButtonAppBar(props) {
   const homeUrl = `/`;
   const setModalAtom = useSetRecoilState(modalAtom);
   const [userState, setUserState] = useRecoilState(userAtom);
-  console.log("userState", userState);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -58,12 +57,11 @@ export default function ButtonAppBar(props) {
           ) : (
             <GoogleLogin
               onSuccess={(credentialResponse) => {
-                console.log(credentialResponse);
                 localStorage.setItem(JWT_NAME, credentialResponse.credential);
                 login(setUserState);
               }}
               onError={() => {
-                console.log("Login Failed");
+                console.error("Login Failed");
               }}
             />
           )}

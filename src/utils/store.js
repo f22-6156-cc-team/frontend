@@ -18,3 +18,10 @@ export const userAtom = atom({
   key: "user",
   default: defaultUserState,
 });
+
+export const listingsAtom = atom({
+  key: "listings",
+  default: {
+    list: [],
+  },
+});

@@ -1,10 +1,12 @@
 import Axios from "axios";
+import { faker } from "@faker-js/faker";
 import { JWT_NAME } from "./const";
+
 export const request = Axios.create();
 
 // set every request headers with JWT Token
 request.interceptors.request.use((req) => {
-  const JWTToken = localStorage.getItem(JWT_NAME) || '';
+  const JWTToken = localStorage.getItem(JWT_NAME) || "";
   if (JWTToken) {
     req.headers = {
       Authorization: `Bearer ${JWTToken}`,
@@ -61,13 +63,32 @@ export const APIs = {
       const resp = await request.get(
         `${Endpoints.LISTING_SERVICE_ENDPOINT}/listings`
       );
-      console.log('resp', resp);
 
-      return resp.data;
+      return resp.data.map((v) => ({
+        ...v,
+        img: faker.image.imageUrl(250, 140, "city", true),
+      }));
     } catch (e) {
       console.error(e);
     }
 
     return [];
+  },
+
+  async createListing(data) {
+    try {
+      const resp = await request.post(
+        `${Endpoints.LISTING_SERVICE_ENDPOINT}/listings`,
+        data
+      );
+
+      return {
+        ...resp.data,
+        img: faker.image.imageUrl(250, 140, "city", true),
+      };
+    } catch (e) {
+      console.error(e);
+    }
+    return null;
   },
 };

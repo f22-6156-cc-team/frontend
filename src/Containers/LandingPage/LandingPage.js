@@ -5,25 +5,23 @@ import "./LandingPage.css";
 import { APIs } from "../../utils/api";
 import { Card } from "@mui/material";
 import { CardContent, Modal } from "@mui/material";
-import { faker } from "@faker-js/faker";
 import { Button } from "@mui/material";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { modalAtom } from "../../utils/store";
+import { listingsAtom, modalAtom } from "../../utils/store";
 import { TextField } from "@mui/material";
-import { FormControl } from "@mui/material";
-import { RadioGroup } from "@mui/material";
 import { FormControlLabel } from "@mui/material";
-import { Radio } from "@mui/material";
-import { FormLabel } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { FormGroup } from "@mui/material";
 import { Checkbox } from "@mui/material";
+import { useRecoilState } from "recoil";
 
 const LISTINGS_PER_PAGE = 8;
 
 function UploadForm() {
+  const [startDate, setStartDate] = useState("2022/11/28");
+  const [endDate, setEndDate] = useState("2022/11/28");
+
   return (
     <>
       {[
@@ -64,18 +62,20 @@ function UploadForm() {
       ))}
       <DatePicker
         label="Start Date"
-        // value={value}
-        // onChange={(newValue) => {
-        //   setValue(newValue);
-        // }}
+        inputFormat="YYYY/MM/DD"
+        value={startDate}
+        onChange={(v) => {
+          setStartDate(v);
+        }}
         renderInput={(params) => <TextField id={"startDate"} {...params} />}
       />
       <DatePicker
         label="End Date"
-        // value={value}
-        // onChange={(newValue) => {
-        //   setValue(newValue);
-        // }}
+        inputFormat="YYYY/MM/DD"
+        value={endDate}
+        onChange={(v) => {
+          setEndDate(v);
+        }}
         renderInput={(params) => <TextField id={"endDate"} {...params} />}
       />
       {[
@@ -85,7 +85,11 @@ function UploadForm() {
         "hasMaintenance",
         "hasGym",
       ].map((label) => (
-        <FormControlLabel control={<Checkbox id={label} />} key={label} label={label} />
+        <FormControlLabel
+          control={<Checkbox id={label} />}
+          key={label}
+          label={label}
+        />
       ))}
     </>
   );
@@ -94,6 +98,7 @@ function UploadForm() {
 function UploadModal() {
   const modalState = useRecoilValue(modalAtom);
   const setModalState = useSetRecoilState(modalAtom);
+  const setListingsState = useSetRecoilState(listingsAtom);
 
   return (
     <Modal open={modalState.isUploadModalOpen}>
@@ -102,12 +107,62 @@ function UploadModal() {
         <p className="text-sm text-neutral-400">listing detail</p>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <form
-            onSubmit={(event) => {
-              console.log("tet", event);
+            onSubmit={async (event) => {
               event.preventDefault();
-              // setModalState({
-              //   isUploadModalOpen: false,
-              // });
+
+              const data = {
+                // FIXME: what is uid in jwt
+                authorUserId: 1,
+                isActive: 1,
+                listingName: "listing CCCCC",
+                listingAddress: "test address B",
+                currentResidentsNum: 3,
+                totalResidentsNum: 7,
+                price: 3000,
+                locationArea: "10025",
+                startDate: "2022/10/10",
+                endDate: "2023/10/10",
+                listingTotalSize: 500,
+                listingSize: 400,
+                floor: 9,
+                hasElevator: 1,
+                isPetFriendly: 0,
+                isSmokingFriendly: 1,
+                washerDryerLocation: "NA",
+                hasMaintenance: 1,
+                hasGym: 1,
+              };
+
+              // transform date type
+              Array.from(event.target).forEach((item) => {
+                if (!item.id) {
+                  return;
+                }
+
+                if (item.type === "checkbox") {
+                  data[item.id] = item.checked ? 1 : 0;
+                  return;
+                }
+
+                if (item.type === "number") {
+                  data[item.id] = parseInt(item.value);
+                  return;
+                }
+
+                data[item.id] = item.value;
+              });
+
+              const resp = await APIs.createListing(data);
+              if (resp) {
+                setListingsState((curr) => ({
+                  ...curr,
+                  list: curr.list.concat(resp),
+                }));
+              }
+
+              setModalState({
+                isUploadModalOpen: false,
+              });
             }}
           >
             <div className="grid grid-cols-2 gap-12">
@@ -136,29 +191,22 @@ function UploadModal() {
 }
 
 const LandingPage = () => {
-  const [listingsData, setListingsData] = useState([]);
+  const [listingsState, setListingsState] = useRecoilState(listingsAtom);
   useEffect(() => {
-    async function fetchListingsData() {
-      try {
-        const data = await APIs.getListings();
-        setListingsData(
-          data.map((v) => ({
-            ...v,
-            img: faker.image.imageUrl(250, 140, "city", true),
-          }))
-        );
-      } catch (err) {
-        console.log(err);
-      }
+    async function fetchlistingsState() {
+      const data = await APIs.getListings();
+      setListingsState({
+        list: data,
+      });
     }
-    fetchListingsData();
+    fetchlistingsState();
   }, []);
 
   const [currPage, setCurrPage] = useState(0);
   const start = currPage * LISTINGS_PER_PAGE;
   const end = start + LISTINGS_PER_PAGE;
-  const currentPageData = listingsData?.slice(start, end);
-  const pageCount = Math.ceil(listingsData?.length / LISTINGS_PER_PAGE);
+  const currentPageData = listingsState.list.slice(start, end);
+  const pageCount = Math.ceil(listingsState.list.length / LISTINGS_PER_PAGE);
 
   function handlePageClick({ selected: selectedPage }) {
     setCurrPage(selectedPage);
@@ -167,7 +215,7 @@ const LandingPage = () => {
   return (
     <div className="flex flex-col">
       <Grid className="m-auto grid grid-cols-4 gap-8 p-8 pt-16">
-        {/* <ListingContainer listingsData={currentPageData}/> */}
+        {/* <ListingContainer listingsState={currentPageData}/> */}
         {currentPageData.map((listing) => (
           <Card
             variant="outlined"
