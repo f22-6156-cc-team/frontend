@@ -29,7 +29,7 @@ const LandingPage = () => {
   const pageCount = Math.ceil(listingsData?.length/LISTINGS_PER_PAGE);
 
   function handlePageClick({ selected: selectedPage }) {
-    setCurrPage(selectedPage); 
+    setCurrPage(selectedPage);
   };
  
   return (    

@@ -9,6 +9,7 @@ import UserContact from './Containers/User/UserContact';
 import UserProfileEdit from './Containers/User/UserProfileEdit'
 import UserPrefEdit from './Containers/User/UserPrefEdit';
 import UserContactEdit from './Containers/User/UserContactEdit';
+import ListingDetail from './Containers/Listing/ListingDetail';
 
 function App() {
   const uid = 1;
@@ -37,6 +38,9 @@ function App() {
         </Routes>
         <Routes>
           <Route exact path="/usercontact/:uid/edit" element={<UserContactEdit/>}/>
+        </Routes>
+        <Routes>
+          <Route exact path="/listing/:lid" element={<ListingDetail/>}/>
         </Routes>
       </Router>
     </div>
