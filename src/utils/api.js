@@ -22,7 +22,7 @@ export async function getUserProfile(uid) {
 
 export async function getValidatedAddress(addressLines) {
   if (addressLines) {
-    fetch(`${GOOGLE_PLACES_API}`, {
+    return await fetch(`${GOOGLE_PLACES_API}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -34,11 +34,7 @@ export async function getValidatedAddress(addressLines) {
       })  
     })
     .then((res) => res.json()) 
+    .then((res) => {return res;} )
   }
   return null;
 };
-
-export async function exportData(addressLines) {
-  const res = await getValidatedAddress(addressLines);
-  return res;
-}

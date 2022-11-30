@@ -1,22 +1,20 @@
-import React, { useState } from 'react'
-import { exportData } from '../../utils/api'
+import React, { useState, useEffect } from 'react'
+import { getValidatedAddress } from '../../utils/api'
 
 const AddressVerifier = () => {
-  const [addressLines, setAddressLines] = useState([])
-
+  const [addressLines, setAddressLines] = useState([]);
+  const [verifiedData, setVerifiedData] = useState([]);
+  const [init, setInit]= useState(true);
   const handleSubmit = (e) => {
     e.preventDefault();
     alert(`The address you entered was: ${addressLines}`);
-    const data = exportData(addressLines);
-    console.log('handle', data);
-    // const verdict = rsp['result']['verdict']['validationGranularity'];
-    // if (verdict === 'PREMISE') {
-    //     const verified = rsp['result']['address']['formattedAddress']
-    //     alert(`Please use the suggested address: ${verified}`);
-    //     // call put to update BE address info 
-    // } else {
-    //     alert(`Please check your address again`);
-    // }
+    const data = getValidatedAddress(addressLines);
+    data.then((value) => {
+        setVerifiedData(value);
+        value?.result?.verdict.validationGranularity === 'PREMISE' ? 
+        alert(`Please use the suggested address: ${value.result.address.formattedAddress}`)
+        : alert(`Please check your address again`);
+    });
   }
  
   return (
