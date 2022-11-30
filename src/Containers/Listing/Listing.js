@@ -11,6 +11,9 @@ const Listing = (props) => {
     const navigateToUser = () => {
         navigate('/usercontact/'+userId);
     };
+    const navigateToDetail = () => {
+        navigate('/listing/'+data.listingId);
+    };
 
     const listingDetails = (
         <div>
@@ -22,6 +25,9 @@ const Listing = (props) => {
                 Start date: {data?.startDate}<br></br>
                 End date: {data?.endDate}<br></br>
             </p>
+            <Button variant="outlined" onClick={navigateToDetail}>
+                Listing Detail
+            </Button>
           </h4>
           {/* <h4>-------Other information and preferences-------</h4>
           <p>
