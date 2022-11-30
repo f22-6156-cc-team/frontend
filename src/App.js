@@ -9,6 +9,7 @@ import UserContact from "./Containers/User/UserContact";
 import UserProfileEdit from "./Containers/User/UserProfileEdit";
 import UserPrefEdit from "./Containers/User/UserPrefEdit";
 import UserContactEdit from "./Containers/User/UserContactEdit";
+import ListingDetail from './Containers/Listing/ListingDetail';
 import { RecoilRoot } from "recoil";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { useSetRecoilState } from 'recoil';
@@ -50,6 +51,7 @@ function App() {
           path="/usercontact/:uid/edit"
           element={<UserContactEdit />}
         />
+        <Route exact path="/listing/:lid" element={<ListingDetail/>}/>
       </Routes>
     </div>
   );
