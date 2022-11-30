@@ -19,23 +19,11 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<LandingPage/>}/>
-        </Routes>
-        <Routes>
           <Route path="/userprofile/:uid" element={<UserProfile/>}/>
-        </Routes>
-        <Routes>
           <Route exact path="/userpreference/:uid" element={<UserPreference/>}/>
-        </Routes>
-        <Routes>
           <Route exact path="/usercontact/:uid" element={<UserContact/>}/>
-        </Routes>
-        <Routes>
           <Route exact path="/userprofile/:uid/edit" element={<UserProfileEdit/>}/>
-        </Routes>
-        <Routes>
           <Route exact path="/userpreference/:uid/edit" element={<UserPrefEdit/>}/>
-        </Routes>
-        <Routes>
           <Route exact path="/usercontact/:uid/edit" element={<UserContactEdit/>}/>
         </Routes>
       </Router>
