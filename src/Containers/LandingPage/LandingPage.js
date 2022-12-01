@@ -99,6 +99,7 @@ function UploadModal() {
   const modalState = useRecoilValue(modalAtom);
   const setModalState = useSetRecoilState(modalAtom);
   const setListingsState = useSetRecoilState(listingsAtom);
+  const setSnackBarState = useSetRecoilState(snackBarAtom);
 
   return (
     <Modal open={modalState.isUploadModalOpen}>
@@ -160,6 +161,12 @@ function UploadModal() {
                 setListingsState((curr) => ({
                   ...curr,
                   list: curr.list.concat(resp),
+                }));
+                setSnackBarState((prev) => ({
+                  ...prev,
+                  isOpen: true,
+                  message: `Create listing: ${resp.listingName}`,
+                  severity: "success",
                 }));
               }
 
@@ -259,11 +266,11 @@ const LandingPage = () => {
                             (v) => v.listingId !== listing.listingId
                           ),
                         }));
-                        setSnackBarState(prev => ({
+                        setSnackBarState((prev) => ({
                           ...prev,
                           isOpen: true,
                           message: `Delete listing: ${listing.listingName}`,
-                        severity: "success",
+                          severity: "success",
                         }));
                       } else {
                         // error message
