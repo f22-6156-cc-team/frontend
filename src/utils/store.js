@@ -25,3 +25,13 @@ export const listingsAtom = atom({
     list: [],
   },
 });
+
+export const snackBarAtom = atom({
+  key: "snackBar",
+  default: {
+    isOpen: false,
+    message: '',
+    severity: 'success',
+  }
+})
+

@@ -7,7 +7,7 @@ import { Card } from "@mui/material";
 import { CardContent, Modal } from "@mui/material";
 import { Button } from "@mui/material";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { listingsAtom, modalAtom } from "../../utils/store";
+import { listingsAtom, modalAtom, snackBarAtom } from "../../utils/store";
 import { TextField } from "@mui/material";
 import { FormControlLabel } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -102,7 +102,10 @@ function UploadModal() {
 
   return (
     <Modal open={modalState.isUploadModalOpen}>
-      <div className="bg-white w-1/3 h-3/4 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg px-14 py-8 overflow-scroll">
+      <div
+        className="bg-white h-3/4 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg px-14 py-8 overflow-scroll"
+        style={{ width: "700px" }}
+      >
         <h3 className="text-2xl">Upload</h3>
         <p className="text-sm text-neutral-400">listing detail</p>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -192,6 +195,8 @@ function UploadModal() {
 
 const LandingPage = () => {
   const [listingsState, setListingsState] = useRecoilState(listingsAtom);
+  const setSnackBarState = useSetRecoilState(snackBarAtom);
+
   useEffect(() => {
     async function fetchlistingsState() {
       const data = await APIs.getListings();
@@ -239,7 +244,41 @@ const LandingPage = () => {
                   <Button variant="contained" className="w-24">
                     Edit
                   </Button>
-                  <Button variant="contained" color="error" className="w-24">
+                  <Button
+                    variant="contained"
+                    color="error"
+                    className="w-24"
+                    onClick={async () => {
+                      // TODO: check user ownership
+                      const resp = await APIs.deleteListing(listing.listingId);
+                      console.log("resp", resp);
+                      if (resp?.status === 200) {
+                        setListingsState((prev) => ({
+                          ...prev,
+                          list: prev.list.filter(
+                            (v) => v.listingId !== listing.listingId
+                          ),
+                        }));
+                        setSnackBarState(prev => ({
+                          ...prev,
+                          isOpen: true,
+                          message: `Delete listing: ${listing.listingName}`,
+                        severity: "success",
+                        }));
+                      } else {
+                        // error message
+                        const msg = resp?.response?.data
+                          ? `ERROR: ${resp.response.data}`
+                          : `ERROR: Failed to delete listing: ${listing.listingName}`;
+                        setSnackBarState((prev) => ({
+                          ...prev,
+                          isOpen: true,
+                          message: msg,
+                          severity: "error",
+                        }));
+                      }
+                    }}
+                  >
                     Delete
                   </Button>
                 </div>
