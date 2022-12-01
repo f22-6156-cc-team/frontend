@@ -3,8 +3,6 @@ import axios from "axios";
 const USER_SERVICE_ENDPOINT =
   "https://gy8a0m85ci.execute-api.us-east-1.amazonaws.com/test";
 
-const GOOGLE_PLACES_API = "https://addressvalidation.googleapis.com/v1:validateAddress?key=AIzaSyC_bgUWAymO0NfPmyDkz9H2V_M1VMmOtT0";
-
 export async function getUserProfile(uid) {
   if (uid) {
     try {
@@ -22,7 +20,7 @@ export async function getUserProfile(uid) {
 
 export async function getValidatedAddress(addressLines) {
   if (addressLines) {
-    return await fetch(`${GOOGLE_PLACES_API}`, {
+    return await fetch(process.env.REACT_APP_GOOGLE_ADDRESS_VERIFICATION, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
