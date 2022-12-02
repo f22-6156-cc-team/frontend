@@ -41,7 +41,7 @@ export default function ButtonAppBar(props) {
             className="mr-2"
             onClick={() => {
               setModalAtom({
-                isUploadModalOpen: true,
+                isListingModalOpen: true,
               });
             }}
           >

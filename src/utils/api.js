@@ -54,10 +54,6 @@ export const APIs = {
       return null;
     }
   },
-  /**
-   *
-   * @param {*} body - page, size
-   */
   async getListings() {
     try {
       const resp = await request.get(
@@ -74,7 +70,6 @@ export const APIs = {
 
     return [];
   },
-
   async createListing(data) {
     try {
       const resp = await request.post(
@@ -90,5 +85,33 @@ export const APIs = {
       console.error(e);
     }
     return null;
+  },
+  async updateListing(listingId, data) {
+    try {
+      const resp = await request.put(
+        `${Endpoints.LISTING_SERVICE_ENDPOINT}/listing/${listingId}`,
+        data
+      );
+
+      return {
+        ...resp.data,
+        img: faker.image.imageUrl(250, 140, "city", true),
+      };
+    } catch (e) {
+      console.error(e);
+    }
+    return null;
+  },
+  async deleteListing(listingId) {
+    try {
+      const resp = await request.delete(
+        `${Endpoints.LISTING_SERVICE_ENDPOINT}/listing/${listingId}`
+      );
+
+      return resp;
+    } catch (e) {
+      console.error(e);
+      return e;
+    }
   },
 };

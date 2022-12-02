@@ -9,13 +9,42 @@ import UserContact from "./Containers/User/UserContact";
 import UserProfileEdit from "./Containers/User/UserProfileEdit";
 import UserPrefEdit from "./Containers/User/UserPrefEdit";
 import UserContactEdit from "./Containers/User/UserContactEdit";
-import ListingDetail from './Containers/Listing/ListingDetail';
+import ListingDetail from "./Containers/Listing/ListingDetail";
 import { RecoilRoot } from "recoil";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import { useSetRecoilState } from 'recoil';
-import { userAtom } from "./utils/store";
+import { useSetRecoilState } from "recoil";
+import { snackBarAtom, userAtom } from "./utils/store";
 import { login } from "./utils/login";
+import { Snackbar } from "@mui/material";
+import { useRecoilState } from "recoil";
+import { Alert } from "@mui/material";
 
+function Message() {
+  const [snackBarState, setSnackBarState] = useRecoilState(snackBarAtom);
+  return (
+    <Snackbar
+      anchorOrigin={{
+        vertical: "top",
+        horizontal: "center",
+      }}
+      open={snackBarState.isOpen}
+      autoHideDuration={2000}
+    >
+      <Alert
+        onClose={() => {
+          setSnackBarState((prev) => ({
+            ...prev,
+            isOpen: false,
+            message: "",
+          }));
+        }}
+        severity={snackBarState.severity}
+      >
+        {snackBarState.message}
+      </Alert>
+    </Snackbar>
+  );
+}
 
 function App() {
   const uid = 1;
@@ -27,10 +56,10 @@ function App() {
     login(setUserState);
   }, [setUserState]);
 
-  
   return (
     <div className="App">
       <Nav uid={uid} />
+      <Message />
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/userprofile/:uid" element={<UserProfile />} />
@@ -51,7 +80,7 @@ function App() {
           path="/usercontact/:uid/edit"
           element={<UserContactEdit />}
         />
-        <Route exact path="/listing/:lid" element={<ListingDetail/>}/>
+        <Route exact path="/listing/:lid" element={<ListingDetail />} />
       </Routes>
     </div>
   );
