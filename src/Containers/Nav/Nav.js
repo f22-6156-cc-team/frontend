@@ -7,10 +7,11 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useSetRecoilState, useRecoilState } from "recoil";
-import { modalAtom, userAtom } from "../../utils/store";
+import { modalAtom, snackBarAtom, userAtom } from "../../utils/store";
 import { GoogleLogin } from "@react-oauth/google";
-import { JWT_NAME } from "../../utils/const";
+import { GOOGLE_JWT_NAME, JWT_NAME, JWT_REFRESH_NAME } from "../../utils/const";
 import { login } from "../../utils/login";
+import { APIs } from "../../utils/api";
 
 export default function ButtonAppBar(props) {
   const uid = props.uid;
@@ -18,6 +19,7 @@ export default function ButtonAppBar(props) {
   const homeUrl = `/`;
   const setModalAtom = useSetRecoilState(modalAtom);
   const [userState, setUserState] = useRecoilState(userAtom);
+  const setSnackBarState = useSetRecoilState(snackBarAtom);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -56,8 +58,26 @@ export default function ButtonAppBar(props) {
             </Button>
           ) : (
             <GoogleLogin
-              onSuccess={(credentialResponse) => {
-                localStorage.setItem(JWT_NAME, credentialResponse.credential);
+              onSuccess={async (credentialResponse) => {
+                const { credential } = credentialResponse;
+                const resp = await APIs.signAccount(credential);
+
+                if (resp.status !== 200) {
+                  const msg = resp?.response?.data
+                    ? `ERROR: ${resp.response.data}`
+                    : `ERROR: Failed to sign account`;
+                  setSnackBarState((prev) => ({
+                    ...prev,
+                    isOpen: true,
+                    message: msg,
+                    severity: "error",
+                  }));
+                  return;
+                }
+
+                localStorage.setItem(GOOGLE_JWT_NAME, credential);
+                localStorage.setItem(JWT_NAME, resp.data.access_token);
+                localStorage.setItem(JWT_REFRESH_NAME, resp.data.refresh_token);
                 login(setUserState);
               }}
               onError={() => {

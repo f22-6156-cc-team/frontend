@@ -2,10 +2,17 @@ import Axios from "axios";
 import { faker } from "@faker-js/faker";
 import { JWT_NAME } from "./const";
 
-export const request = Axios.create();
+export const request = Axios.create({
+  baseURL: process.env.REACT_APP_BASE_URL,
+});
 
 // set every request headers with JWT Token
 request.interceptors.request.use((req) => {
+  // skip inject existed Authorization
+  if (req.headers.Authorization) {
+    return req;
+  }
+
   const JWTToken = localStorage.getItem(JWT_NAME) || "";
   if (JWTToken) {
     req.headers = {
@@ -14,23 +21,6 @@ request.interceptors.request.use((req) => {
   }
   return req;
 });
-
-/**
- * API Endpoints
- */
-const Endpoints =
-  process.env.NODE_ENV === "production"
-    ? {
-        USER_SERVICE_ENDPOINT:
-          "https://gy8a0m85ci.execute-api.us-east-1.amazonaws.com/test",
-        LISTING_SERVICE_ENDPOINT:
-          "https://gy8a0m85ci.execute-api.us-east-1.amazonaws.com/test",
-      }
-    : {
-        USER_SERVICE_ENDPOINT:
-          "https://gy8a0m85ci.execute-api.us-east-1.amazonaws.com/test",
-        LISTING_SERVICE_ENDPOINT: `${process.env.REACT_APP_BASE_URL}/api`,
-      };
 
 export const APIs = {
   /**
@@ -41,13 +31,8 @@ export const APIs = {
   async getUserProfile(uid) {
     if (uid) {
       try {
-        const rsp = await request.get(
-          `${Endpoints.USER_SERVICE_ENDPOINT}/user/${uid}`
-        );
+        const rsp = await request.get(`/user/${uid}`);
         return rsp.data;
-        // console.log(resp);
-        // const firstname = resp.data.firstname;
-        // return firstname;
       } catch (e) {
         console.error(e);
       }
@@ -56,9 +41,7 @@ export const APIs = {
   },
   async getListings() {
     try {
-      const resp = await request.get(
-        `${Endpoints.LISTING_SERVICE_ENDPOINT}/listings`
-      );
+      const resp = await request.get("/listings");
 
       return resp.data.map((v) => ({
         ...v,
@@ -72,10 +55,7 @@ export const APIs = {
   },
   async createListing(data) {
     try {
-      const resp = await request.post(
-        `${Endpoints.LISTING_SERVICE_ENDPOINT}/listings`,
-        data
-      );
+      const resp = await request.post("/listings", data);
 
       return {
         ...resp.data,
@@ -88,10 +68,7 @@ export const APIs = {
   },
   async updateListing(listingId, data) {
     try {
-      const resp = await request.put(
-        `${Endpoints.LISTING_SERVICE_ENDPOINT}/listing/${listingId}`,
-        data
-      );
+      const resp = await request.put(`/listing/${listingId}`, data);
 
       return {
         ...resp.data,
@@ -104,9 +81,41 @@ export const APIs = {
   },
   async deleteListing(listingId) {
     try {
-      const resp = await request.delete(
-        `${Endpoints.LISTING_SERVICE_ENDPOINT}/listing/${listingId}`
+      const resp = await request.delete(`/listing/${listingId}`);
+
+      return resp;
+    } catch (e) {
+      console.error(e);
+      return e;
+    }
+  },
+  async signAccount(credential) {
+    try {
+      const resp = await request.post(
+        `/account/sign`,
+        new URLSearchParams({
+          credential,
+        }),
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        }
       );
+
+      return resp;
+    } catch (e) {
+      console.error(e);
+      return e;
+    }
+  },
+  async refreshAccount(refreshToken) {
+    try {
+      const resp = await request.post(`/account/refresh`, undefined, {
+        headers: {
+          Authorization: `Bearer ${refreshToken}`,
+        },
+      });
 
       return resp;
     } catch (e) {
