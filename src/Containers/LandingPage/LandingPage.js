@@ -13,6 +13,7 @@ import {
   listingsAtom,
   modalAtom,
   snackBarAtom,
+  userExpSelector,
 } from "../../utils/store";
 import { TextField } from "@mui/material";
 import { FormControlLabel } from "@mui/material";
@@ -285,6 +286,7 @@ const LandingPage = () => {
   const setSnackBarState = useSetRecoilState(snackBarAtom);
   const setListingState = useSetRecoilState(listingAtom);
   const setModalState = useSetRecoilState(modalAtom);
+  const userExp = useRecoilValue(userExpSelector);
 
   useEffect(() => {
     async function fetchlistingsState() {
@@ -294,7 +296,9 @@ const LandingPage = () => {
       });
     }
     fetchlistingsState();
-  }, []);
+
+    // refetch when user updated
+  }, [userExp]);
 
   const [currPage, setCurrPage] = useState(0);
   const start = currPage * LISTINGS_PER_PAGE;

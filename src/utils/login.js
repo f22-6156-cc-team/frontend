@@ -21,7 +21,6 @@ export async function login(setUserState, retry = 3) {
 
   if (decoded?.exp < Date.now() / 1000) {
     // expire
-    // TODO: refresh
     const refreshToken = localStorage.getItem(JWT_REFRESH_NAME);
 
     if (refreshToken) {
@@ -45,4 +44,5 @@ export async function login(setUserState, retry = 3) {
     picture: decodedGoogle.picture,
     exp: decoded.exp,
   });
+
 }
