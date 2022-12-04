@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "dotenv -e ./.env.development -- react-scripts start",
+    "dev": "dotenv -e ./.env.development -- react-scripts start",
+    "dev:prod": "dotenv -e ./.env.production -- react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
