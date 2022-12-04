@@ -8,7 +8,7 @@ export const request = Axios.create({
 
 // set every request headers with JWT Token
 request.interceptors.request.use((req) => {
-  // skip inject existed Authorization
+  // skip existed Authorization injection
   if (req.headers.Authorization) {
     return req;
   }
