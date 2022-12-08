@@ -1,67 +1,131 @@
 import React, { useState } from "react";
 import Sidebar from "../UserSidebar/Sidebar";
 import Button from "@mui/material/Button";
-import Avatar from "@mui/material/Avatar";
+import Grid from "@mui/material/Grid";
+import { APIs } from "../../utils/api";
+import { Card } from "@mui/material";
+import { CardContent, Modal } from "@mui/material";
 import "./User.css";
 import { useEffect } from "react";
 import axios from "axios";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { listingsAtom, modalAtom } from "../../utils/store";
+import { TextField } from "@mui/material";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { JWT_NAME } from "../../utils/const";
+import { useRecoilState } from "recoil";
+import { userAtom } from "../../utils/store";
 
-const UserProfile = () => {
+function UserProfile (props) {
   const { uid } = useParams();
   const [userProfile, setUserProfile] = useState(null);
-  const navigate = useNavigate();
+  const modalState = useRecoilValue(modalAtom);
+  const setModalState = useSetRecoilState(modalAtom);
+
+  function EditForm() {
+    return (
+      <>
+        <TextField autoFocus margin="dense" id={"username"} label={"User Name"} type="text" fullWidth variant="standard" defaultValue={userProfile?.username}/>
+        <TextField autoFocus margin="dense" id={"firstName"} label={"First Name"} type="text" fullWidth variant="standard" defaultValue={userProfile?.firstName}/>
+        <TextField autoFocus margin="dense" id={"lastName"} label={"Last Name"} type="text" fullWidth variant="standard" defaultValue={userProfile?.lastName}/>
+      </>
+    );
+  }
+  
+  function EditModal() {
+    return (
+      <Modal open={modalState.isUploadModalOpen}>
+        <div className="bg-white w-1/3 h-3/4 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg px-14 py-8 overflow-scroll">
+          <h3 className="text-2xl">Edit Your Profile</h3>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                const data = { username: userProfile?.username,
+                               firstName: userProfile?.firstName,
+                               lastName: userProfile?.lastName };
+                Array.from(e.target).forEach((item) => {
+                  data[item.id] = item.value;
+              });
+                const resp = await APIs.editUser(uid, data);
+                console.log(resp);
+                if (resp) {
+                  window.profile = true;
+                }else {
+                  window.profile = false;
+                }
+  
+                setModalState({
+                  isUploadModalOpen: false,
+                });
+              }}
+            >
+              <div className="grid grid-cols-2 gap-12">
+                <EditForm />
+              </div>
+              <div className="flex justify-end gap-4 mt-8">
+                <Button
+                  variant="outlined"
+                  onClick={() => {
+                    setModalState({
+                      isUploadModalOpen: false,
+                    });
+                  }}
+                >
+                  CANCEL
+                </Button>
+                <Button type="submit" variant="contained">
+                  SUBMIT
+                </Button>
+              </div>
+            </form>
+          </LocalizationProvider>
+        </div>
+      </Modal>
+    );
+  }
 
   useEffect( ()=> {
     async function fetchUserData() {
-      if (uid) {
-        try {
-          const rsp = await axios.get(`https://gy8a0m85ci.execute-api.us-east-1.amazonaws.com/test/user/${uid}`);
-          setUserProfile(rsp.data);
-        } catch(err) {
-          console.log(err)
-        }
-      }
+      const resp = await APIs.getUserProfile(uid);
+      setUserProfile(resp);
     }
     fetchUserData();
-  }, []);
-  
-  const item = (field, value) => ( 
-    <div className="mt-1 font-normal text-lg flex ml-8">
-    <span className="p-1 font-medium text-gray-900"> {field} </span>
-    <span className="hover:text-gray-900 p-1"> {value} </span>
-    </div>)
-  
-  const profile = ( userProfile &&
-    <div>
-      {/* <Avatar
-            className="w-64 h-64 mt-32 mb-16"
-            alt="Remy Sharp"
-            src="avator.png"
-      /> */}
-      {item("Username: ", userProfile.username)}
-      {item("User ID: ", userProfile.userId)}
-      {item("First Name: ", userProfile.firstName)}
-      {item("Last Name: ", userProfile.lastName)}
-    </div>
-  )
-
-  const editButton = <Button onClick={toEdit} color="inherit"> Edit </Button>;
-  //Sending required data for updating email and phone to edit page
-  function toEdit(){ 
-    navigate(`/userprofile/${uid}/edit`, {state:{ username: userProfile.username }}); 
-  }
+  }, [window.profile]);
 
   return (
     <div className="flex">
-      {userProfile && <Sidebar uid={userProfile?.userId}/>}
-      <div className="text-gray-500 flex-1 flex flex-col items-center">
-        <div className="flex flex-col place-items-stretch"> 
-          {(window.profile == undefined) ? '' : (window.profile ? "Successfully Updated" : "Invalid Input")} 
-          {profile}
-          {editButton}
-        </div>
-      </div>
+      <Sidebar />
+      <Grid className="m-auto grid grid-cols-2 gap-4 p-4 pt-8">
+        <Card
+          variant="outlined"
+          className="hover:shadow-2xl shadow-md"
+        >
+          <CardContent className="flex flex-col w-96">
+            <div className="flex justify-between items-center">
+              <h3 className="font-bold text-2xl">{userProfile?.username}</h3>
+            </div>
+            <div className="flex text-start items-start">
+              <div className="pt-2 space-y-2">
+                <p>User ID: {userProfile?.userId}</p>
+                <p>First Name: {userProfile?.firstName}</p>
+                <p>Last Name: {userProfile?.lastName}</p>
+              </div>
+              <div>
+              {(window.profile == undefined) ? '' : (window.profile ? "Successfully Updated" : "Invalid Input")} 
+              </div>
+            </div>
+            <div className="pt-1 pr-2 flex-1 flex flex-col items-end space-y-2">
+                <Button variant="contained" className="w-24" onClick={() => {setModalState({isUploadModalOpen: true});}}>
+                  Edit
+                </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </Grid>
+      <EditModal />
     </div>
   );
 }

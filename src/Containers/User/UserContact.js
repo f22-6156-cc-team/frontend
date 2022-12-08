@@ -1,61 +1,53 @@
 import Sidebar from "../UserSidebar/Sidebar";
 import React, { useEffect, useState } from "react";
-import Button from "@mui/material/Button";
-import axios from "axios";
-import { useParams, Link, useNavigate} from "react-router-dom";
+import Axios from "axios";import { useParams, Link, useNavigate} from "react-router-dom";
+import { Card, CardContent, Modal, Select, MenuItem, Grid, Button} from "@mui/material";
+import { login } from "../../utils/login";
+import { useSetRecoilState } from 'recoil';
+import { userAtom } from "../../utils/store";
+import { JWT_NAME } from "../../utils/const";
+import { APIs } from "../../utils/api";
 
 function UserContact() {
   const { uid } = useParams();
   const [userContactData, setUserContactData] = useState(null);
   const navigate = useNavigate();
-  
+  const setUserState = useSetRecoilState(userAtom);
+  const request = Axios.create();
+
   useEffect(() => {
     async function fetchUserContactData() {
-      try {
-        const rsp = await axios.get(
-          `https://gy8a0m85ci.execute-api.us-east-1.amazonaws.com/test/user/${uid}/contact`
-        );
-        setUserContactData(rsp.data);
-        // console.log(rsp.data);
-      } catch (err) {
-        console.log(err);
-      }
+      const data = await APIs.getContact(uid);
+      console.log(data);
+      setUserContactData(data);
     }
     fetchUserContactData();
   }, []);
 
-  const item = (key, val) => (
-    <div className="mt-1 font-normal text-lg flex ml-8">
-      <span className="p-1 font-medium text-gray-900">{key} : </span>
-      <span className="hover:text-gray-900 p-1"> {val}</span>
-    </div>
-  );
-
-  const email = userContactData?.emails[0]?.address;
-  const phone = userContactData?.phones[0]?.number;
-  const editButton = <Button onClick={toEdit} color="inherit"> Edit </Button>;
-  //Sending required data for updating email and phone to edit page
-  function toEdit(){ 
-    navigate(`/usercontact/${uid}/edit`, {state:{
-    email: email,
-    emailId: userContactData?.emails[0]?.emailId, 
-    emailType: userContactData?.emails[0]?.emailType, 
-    phone: phone,
-    phoneId: userContactData?.phones[0]?.phoneId,
-    phoneType: userContactData?.phones[0]?.phoneType
-    }}); }
   
   return (
-    <div>
+    <div className="flex">
       <Sidebar />
-      <div className="text-gray-500 flex-1 flex flex-col items-center">
-        <div className="flex flex-col place-items-stretch">
-          {(window.contact == undefined) ? '' : (window.contact ? "Successfully Updated" : "Invalid Input")} 
-          {item("Email", email)}
-          {item("Phone", phone)}
-        </div>
-        {editButton}
-      </div>
+      <Grid className="m-auto grid grid-cols-2 gap-4 p-4 pt-8">
+        <Card
+          variant="outlined"
+          className="hover:shadow-2xl shadow-md"
+        >
+          <CardContent className="flex flex-col w-96">
+            <div className="flex justify-between items-center">
+              <h3 className="font-bold text-2xl">User Contact</h3>
+            </div>
+            <div className="flex text-start items-start">
+              <div className="pt-2 space-y-2">
+                <p>Email: {userContactData?.emails[0]?.address}</p>
+                <p>Email Type: {userContactData?.emails[0]?.emailType}</p>
+                <p>Phone: {userContactData?.phones[0]?.number}</p>
+                <p>Phone Type: {userContactData?.phones[0]?.phoneType}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </Grid>
     </div>
   );
 }

@@ -44,5 +44,4 @@ export async function login(setUserState, retry = 3) {
     picture: decodedGoogle.picture,
     exp: decoded.exp,
   });
-
 }
