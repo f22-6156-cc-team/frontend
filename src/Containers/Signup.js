@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Col, Button, Row, Container, Card, Form } from "react-bootstrap";
 import { APIs } from '../utils/api';
 import { Select, MenuItem } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 export default function Signup(props) {
     const [username, setUserName] = useState();
@@ -37,6 +38,8 @@ export default function Signup(props) {
     const onPhone = (e) => setPhone(e.target.value);
     const onPhoneType = (e) => setPhoneType(e.target.value);
     const userId = props?.uid
+    const navigate = useNavigate();
+
     // signup
     const handleSignup = async (e) => {
         e.preventDefault();
@@ -85,6 +88,7 @@ export default function Signup(props) {
           "number": phone
         }
         const rsp2 = await APIs.createPhone(userId, phoneData);
+        navigate('/');
     }
 
   return (
