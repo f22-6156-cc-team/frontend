@@ -39,7 +39,7 @@ export default function ButtonAppBar(props) {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             RentalHub
           </Typography>
-          <Button
+          {/* <Button
             color="success"
             variant="contained"
             className="mr-2"
@@ -50,7 +50,7 @@ export default function ButtonAppBar(props) {
             }}
           >
             Upload
-          </Button>
+          </Button> */}
           <Button href={homeUrl} color="inherit">
             Home
           </Button>

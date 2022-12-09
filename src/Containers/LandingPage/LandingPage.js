@@ -23,7 +23,11 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { Checkbox } from "@mui/material";
 import { useRecoilState } from "recoil";
-
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import DateRangeIcon from '@mui/icons-material/DateRange';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import Fab from '@mui/material/Fab';
+import AddIcon from '@mui/icons-material/Add';
 const LISTINGS_PER_PAGE = 8;
 
 function ListingForm({ shrinkDefault }) {
@@ -142,7 +146,7 @@ function ListingModalContent() {
 
   return (
     <div
-      className="bg-white h-3/4 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg px-14 py-8 overflow-scroll"
+      className="bg-white  absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg px-14 py-8 overflow-scroll"
       style={{ width: "700px" }}
     >
       <h3 className="text-2xl">{modalState.listingModalAction}</h3>
@@ -314,8 +318,22 @@ const LandingPage = () => {
 
   return (
     <div className="flex flex-col">
+      <Grid item container justifyContent="flex-end">
+        <Grid item md={2} justifyContent="flex-end">
+          <Fab variant="extended" color="success" aria-label="add"
+           onClick={() => {
+            setModalState({
+              isListingModalOpen: true,
+            });
+          }}>
+            <AddIcon />Create Listing
+          </Fab>
+        </Grid>
+      </Grid>
       <Grid className="m-auto grid grid-cols-4 gap-8 p-8 pt-16">
         {/* <ListingContainer listingsState={currentPageData}/> */}
+        
+        
         {currentPageData.map((listing) => (
           <Card
             variant="outlined"
@@ -327,29 +345,15 @@ const LandingPage = () => {
               <div className="flex justify-between items-center">
                 <h3 className="font-bold text-2xl">{listing.listingName}</h3>
                 <div className="text-sm">
-                  {listing.startDate}-{listing.endDate}
+                  <DateRangeIcon/>{listing.startDate}-{listing.endDate}
                 </div>
               </div>
               <div className="flex text-start items-start">
                 <div className="pt-2 space-y-2">
-                  <p>Address: {listing.listingAddress}</p>
-                  <p>Location: {listing.locationArea}</p>
+                  <p><LocationOnIcon/>{listing.listingAddress},{listing.locationArea}</p>
+                  <p><AttachMoneyIcon/>{listing.price}</p>
                 </div>
                 <div className="pt-1 pr-2 flex-1 flex flex-col items-end space-y-2">
-                  <Button
-                    variant="contained"
-                    className="w-24"
-                    onClick={() => {
-                      setListingState(listing);
-                      setModalState((prev) => ({
-                        ...prev,
-                        isListingModalOpen: true,
-                        listingModalAction: LISTING_MODAL_ACTIONS.EDIT,
-                      }));
-                    }}
-                  >
-                    Edit
-                  </Button>
                   <Button variant="contained" className="w-24" onClick={()=>{navigate(`/listing/${listing.listingId}`)}}>
                     Detail
                   </Button>

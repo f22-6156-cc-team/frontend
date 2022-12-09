@@ -1,10 +1,10 @@
 import React from 'react'
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useParams } from 'react-router-dom';
 import { APIs } from '../../utils/api';
-import { Grid,Container, Paper, Card, CardMedia, CardContent, Typography, CardActions, Button } from '@mui/material';
-import { faker } from "@faker-js/faker";
+import { Grid,Container, Paper, Card, CardMedia, CardContent, Typography, CardActions, Button, Modal } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
@@ -20,52 +20,280 @@ import SmokingRoomsIcon from '@mui/icons-material/SmokingRooms';
 import SmokeFreeIcon from '@mui/icons-material/SmokeFree';
 import ToggleOffIcon from '@mui/icons-material/ToggleOff';
 import ToggleOnIcon from '@mui/icons-material/ToggleOn';
-export default function ListingDetail() {
+import { TextField } from "@mui/material";
+import { FormControlLabel } from "@mui/material";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { Checkbox } from "@mui/material";
+import { useRecoilState } from "recoil";
+import {
+  LISTING_MODAL_ACTIONS,
+  listingAtom,
+  listingsAtom,
+  modalAtom,
+  snackBarAtom,
+  userExpSelector,
+} from "../../utils/store";
+
+
+
+
+
+export default function ListingDetail(props) {
     const { lid } = useParams();
     const [listingData, setListingsData] = useState(null);
+    const setListingState = useSetRecoilState(listingAtom);
+    const setModalState = useSetRecoilState(modalAtom);
+    function ListingModalContent() {
+      /** upload or edit */
+      const modalState = useRecoilValue(modalAtom);
+      const listingState = useRecoilValue(listingAtom);
+      const setModalState = useSetRecoilState(modalAtom);
+      const setListingsState = useSetRecoilState(listingsAtom);
+      const setSnackBarState = useSetRecoilState(snackBarAtom);
+    
+      useEffect(() => {
+        if (modalState.listingModalAction !== LISTING_MODAL_ACTIONS.EDIT) {
+          return;
+        }
+    
+        [
+          "listingName",
+          "listingAddress",
+          "locationArea",
+          "washerDryerLocation",
+          "currentResidentsNum",
+          "totalResidentsNum",
+          "price",
+          "listingSize",
+          "listingTotalSize",
+          "floor",
+          "startDate",
+          "endDate",
+          "isPetFriendly",
+          "isSmokingFriendly",
+          "hasMaintenance",
+          "hasGym",
+        ].forEach((label) => {
+          const element = document.getElementById(label);
+          element.value = listingState[label];
+        });
+      }, [listingState, modalState.listingModalAction]);
+    
+      return (
+        <div
+          className="bg-white absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg px-14 py-8 overflow-scroll"
+          style={{ width: "700px" }}
+        >
+          <h3 className="text-2xl">{modalState.listingModalAction}</h3>
+          <p className="text-sm text-neutral-400">listing detail</p>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <form
+              onSubmit={async (event) => {
+                event.preventDefault();
+    
+                const data = {
+                  // FIXME: what is uid in jwt
+                  authorUserId: 1,
+                  listingName: "listing CCCCC",
+                  listingAddress: "test address B",
+                  currentResidentsNum: 3,
+                  totalResidentsNum: 7,
+                  price: 3000,
+                  locationArea: "10025",
+                  startDate: "2022/10/10",
+                  endDate: "2023/10/10",
+                  listingTotalSize: 500,
+                  listingSize: 400,
+                  floor: 9,
+                  hasElevator: 1,
+                  isPetFriendly: 0,
+                  isSmokingFriendly: 1,
+                  washerDryerLocation: "NA",
+                  hasMaintenance: 1,
+                  hasGym: 1,
+                };
+    
+                // transform date type
+                Array.from(event.target).forEach((item) => {
+                  if (!item.id) {
+                    return;
+                  }
+    
+                  if (item.type === "checkbox") {
+                    data[item.id] = item.checked ? 1 : 0;
+                    return;
+                  }
+    
+                  if (item.type === "number") {
+                    data[item.id] = parseInt(item.value);
+                    return;
+                  }
+    
+                  data[item.id] = item.value;
+                });
+    
+                // TODO: edit
+                let resp;
+            
+                let msg = "";
+                if (
+                  modalState.listingModalAction === LISTING_MODAL_ACTIONS.UPLOAD
+                ) {
+                  resp = await APIs.createListing(data);
+                  msg = `Upload listing: ${resp.listingName}`;
+                } else if (
+                  modalState.listingModalAction === LISTING_MODAL_ACTIONS.EDIT
+                ) {
+                  resp = await APIs.updateListing(listingData.listingId, data);
+                  console.log(listingData);
+                  console.log(resp)
+                  msg = `Update listing: ${resp.listingName}`;
+                } else {
+                  throw new Error("Not Implemented");
+                }
+    
+                if (resp) {
+                  // setListingsState(newListingsStateCallback);
+                  setSnackBarState((prev) => ({
+                    ...prev,
+                    isOpen: true,
+                    message: msg,
+                    severity: "success",
+                  }));
+                }
+    
+                setModalState({
+                  isListingModalOpen: false,
+                });
+              }}
+            >
+              <div className="grid grid-cols-2 gap-12">
+                <ListingForm
+                  shrinkDefault={
+                    modalState.listingModalAction === LISTING_MODAL_ACTIONS.EDIT
+                  }
+                />
+              </div>
+              <div className="flex justify-end gap-4 mt-8">
+                <Button
+                  variant="outlined"
+                  onClick={() => {
+                    setModalState({
+                      isListingModalOpen: false,
+                    });
+                  }}
+                >
+                  CANCEL
+                </Button>
+                <Button type="submit" variant="contained">
+                  SUBMIT
+                </Button>
+              </div>
+            </form>
+          </LocalizationProvider>
+        </div>
+      );
+    }
+    function ListingForm({ shrinkDefault }) {
+  const [startDate, setStartDate] = useState("2022/11/28");
+  const [endDate, setEndDate] = useState("2022/11/28");
 
+  return (
+    <>
+      {[
+        "listingName",
+        "listingAddress",
+        "locationArea",
+        "washerDryerLocation",
+      ].map((label) => (
+        <TextField
+          autoFocus
+          margin="dense"
+          id={label}
+          label={label}
+          key={label}
+          type="text"
+          fullWidth
+          variant="standard"
+          {...(shrinkDefault && { InputLabelProps: { shrink: true } })}
+        />
+      ))}
+      {[
+        "currentResidentsNum",
+        "totalResidentsNum",
+        "price",
+        "listingSize",
+        "listingTotalSize",
+        "floor",
+      ].map((label) => (
+        <TextField
+          autoFocus
+          margin="dense"
+          id={label}
+          label={label}
+          key={label}
+          type="number"
+          fullWidth
+          variant="standard"
+          {...(shrinkDefault && { InputLabelProps: { shrink: true } })}
+        />
+      ))}
+      <DatePicker
+        label="Start Date"
+        inputFormat="YYYY/MM/DD"
+        value={startDate}
+        onChange={(v) => {
+          setStartDate(v);
+        }}
+        renderInput={(params) => <TextField id={"startDate"} {...params} />}
+        // {...(shrinkDefault && { InputLabelProps: { shrink: true } })}
+      />
+      <DatePicker
+        label="End Date"
+        inputFormat="YYYY/MM/DD"
+        value={endDate}
+        onChange={(v) => {
+          setEndDate(v);
+        }}
+        renderInput={(params) => <TextField id={"endDate"} {...params} />}
+        // {...(shrinkDefault && { InputLabelProps: { shrink: true } })}
+      />
+      {["isPetFriendly", "isSmokingFriendly", "hasMaintenance", "hasGym"].map(
+        (label) => (
+          <FormControlLabel
+            control={<Checkbox id={label} />}
+            key={label}
+            label={label}
+            // {...(shrinkDefault && { InputLabelProps: { shrink: true } })}
+          />
+        )
+      )}
+    </>
+  );
+    }
+    function ListingModal() {
+      /** upload or edit */
+      const modalState = useRecoilValue(modalAtom);
+    
+      return (
+        <Modal open={modalState.isListingModalOpen}>
+          <ListingModalContent />
+        </Modal>
+      );
+    }
     useEffect(() => {
         async function fetchListingData() {
           const resp = await APIs.getOneListing(lid);
           setListingsData(resp)
         }
         fetchListingData();
-      }, []);
+      }, [setListingState]);
 
   return (
     <Container maxWidth="md">
-    {/* <div className='menu'>
-        <h3>{listingData?.listingName}</h3>
-        <h4>
-        <p>
-            Location: {listingData?.locationArea}<br></br>
-            Address: {listingData?.listingAddress}<br></br>
-            Start date: {listingData?.startDate}<br></br>
-            End date: {listingData?.endDate}<br></br>
-            Apartment size: {listingData?.listingTotalSize}<br></br>
-            Room size: {listingData?.listingSize}<br></br>
-            Floor: {listingData?.floor}<br></br>
-            Dryer washer location: {listingData?.washerDryerLocation}<br></br>
-            Price: {listingData?.price}<br></br>
-            In-building elevator: {listingData?.hasElevator ? "yes" : "no"}<br></br>
-            In-building maintenance: {listingData?.hasMaintenance ? "yes" : "no"}<br></br>
-            Gym: {listingData?.hasGym ? "yes" : "no"}<br></br>
-            Pet: {listingData?.isPetFriendly ? "yes" : "no"}<br></br>
-            Smoking: {listingData?.isSmokingFriendly ? "yes" : "no"}<br></br>
-            Listing active: {listingData?.isActive ? "yes" : "no"}<br></br>
-        </p>
-        </h4>
-    </div> */}
     <Card>
-    {/* <Icon classes={{root: classes.iconRoot}}>
-      <img className={classes.imageIcon} src="/graphics/firebase-logo.svg"/>
-    </Icon>
-      <CardMedia
-        component="svg"
-        height="140"
-        image= "../../assets/rental.svg"
-        alt="rental logo"
-      /> */}
       <CardContent>
         <Grid container spacing={2}>
           <Grid item md={8}>
@@ -81,14 +309,9 @@ export default function ListingDetail() {
             </Typography>
           </Grid>
           <Grid item md={6}>
-            {/* <Card> */}
 
           <LocationOnIcon/>  {listingData?.listingAddress}, {listingData?.locationArea}
-            {/* </Card> */}
           </Grid>
-          {/* <Grid item md={3}>
-          Address: {listingData?.listingAddress}
-          </Grid> */}
           <Grid item md={6}>
           <DateRangeIcon/> {listingData?.startDate} - {listingData?.endDate}
           </Grid>
@@ -119,15 +342,25 @@ export default function ListingDetail() {
           <Grid item md={6}>
           Active{listingData?.isActive ? <ToggleOnIcon/> : <ToggleOffIcon/>}
           </Grid>
-
-        {/* <Typography variant="body2" color="text.secondary">
-           per month
-        </Typography> */}
         </Grid>
       </CardContent>
 
       <CardActions>
-        <Button variant="outlined">Back to list</Button>
+        <Button  href="/" variant="outlined">Back to list</Button>
+        <Button
+          variant="contained"
+          className="w-24"
+          onClick={() => {
+            setListingState(listingData);
+            setModalState((prev) => ({
+              ...prev,
+              isListingModalOpen: true,
+              listingModalAction: LISTING_MODAL_ACTIONS.EDIT,
+            }));
+          }}
+        >
+          Edit
+        </Button>
         <Button variant="outlined" startIcon={<EditIcon />}>
           Edit
         </Button>
@@ -136,6 +369,7 @@ export default function ListingDetail() {
         </Button>
       </CardActions>
     </Card>
+    <ListingModal />
     </Container>
   
   )
