@@ -1,6 +1,7 @@
 import Axios from "axios";
 import { faker } from "@faker-js/faker";
 import { JWT_NAME } from "./const";
+import { CoPresentOutlined } from "@mui/icons-material";
 
 export const request = Axios.create({
   baseURL: process.env.REACT_APP_BASE_URL,
@@ -19,6 +20,7 @@ request.interceptors.request.use((req) => {
       Authorization: `Bearer ${JWTToken}`,
     };
   }
+
   return req;
 });
 
@@ -29,15 +31,86 @@ export const APIs = {
    * @returns
    */
   async getUserProfile(uid) {
-    if (uid) {
-      try {
-        const rsp = await request.get(`/user/${uid}`);
-        return rsp.data;
-      } catch (e) {
-        console.error(e);
-      }
-      return null;
+    try {
+      const rsp = await request.get(`/user/${uid}`);
+      return rsp.data;
+    } catch (e) {
+      console.error(e);
     }
+  },
+  async editUser(uid, data) {
+    try {
+      const rsp = await request.put(`/user/${uid}`, data);
+      return rsp.data;
+    } catch (e) {
+      console.error(e);
+    }
+  },
+  async getPreference(uid) {
+    try {
+      const rsp = await request.get(`/user/${uid}/personal_preference`);
+      return rsp.data;
+    } catch (e) {
+      console.error(e);
+    }
+  },
+  async editPreference(uid, data) {
+    try {
+      const rsp = await request.put(`/user/${uid}/personal_preference`, data);
+      return rsp.data;
+    } catch (e) {
+      console.error(e);
+    }
+  },
+  async createPreference(uid, data) {
+    try {
+      const rsp = await request.post(`/user/${uid}/personal_preference`, data);
+      return rsp.data;
+    } catch (e) {
+      console.error(e);
+    }
+  },
+  async getContact(uid) {
+    try {
+      const rsp = await request.get(`/user/${uid}/contact`);
+      return rsp.data;
+    } catch (e) {
+      console.error(e);
+    }
+  },
+  async createContact(uid, data) {
+    try {
+      const rsp = await request.post(`/user/${uid}/contact`, data);
+      return rsp.data;
+    } catch (e) {
+      console.error(e);
+    }
+  },
+  async createEmail(uid, data) {
+    try {
+      const rsp = await request.post(`/user/${uid}/contact/email`, data);
+      return rsp.data;
+    } catch (e) {
+      console.error(e);
+    }
+  },
+  async createPhone(uid, data) {
+    try {
+      const rsp = await request.post(`/user/${uid}/contact/phone`, data);
+      return rsp.data;
+    } catch (e) {
+      console.error(e);
+    }
+  },
+  async getOneListing(lid) {
+    try {
+      const resp = await request.get(`/listing/${lid}`);
+      return resp.data;
+    } catch (e) {
+      console.error(e);
+    }
+
+    return [];
   },
   async getListings() {
     try {
@@ -102,7 +175,7 @@ export const APIs = {
           },
         }
       );
-
+      // console.log(resp)
       return resp;
     } catch (e) {
       console.error(e);

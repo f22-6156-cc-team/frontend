@@ -12,14 +12,16 @@ import { GoogleLogin } from "@react-oauth/google";
 import { GOOGLE_JWT_NAME, JWT_NAME, JWT_REFRESH_NAME } from "../../utils/const";
 import { login } from "../../utils/login";
 import { APIs } from "../../utils/api";
+import { useNavigate } from "react-router-dom";
+import Logout from "../Logout";
 
 export default function ButtonAppBar(props) {
-  const uid = props.uid;
-  const userProfileUrl = `/userprofile/${uid}`;
   const homeUrl = `/`;
+  const userProfileUrl = `/userprofile/${props?.uid}`
   const setModalAtom = useSetRecoilState(modalAtom);
   const [userState, setUserState] = useRecoilState(userAtom);
   const setSnackBarState = useSetRecoilState(snackBarAtom);
+  const navigate = useNavigate();
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -35,7 +37,7 @@ export default function ButtonAppBar(props) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            App Name
+            RentalHub
           </Typography>
           <Button
             color="success"
@@ -53,15 +55,21 @@ export default function ButtonAppBar(props) {
             Home
           </Button>
           {userState.hasLogined ? (
-            <Button href={userProfileUrl} color="inherit">
+            <div>
+              <Button href={userProfileUrl} color="inherit">
               {userState.name}
-            </Button>
+              </Button>
+              <Button color="inherit" onClick={()=>{Logout(setUserState)}}>
+                Logout
+              </Button>
+            </div>
           ) : (
             <GoogleLogin
               onSuccess={async (credentialResponse) => {
                 const { credential } = credentialResponse;
                 const resp = await APIs.signAccount(credential);
-
+                // console.log("resp", resp);
+                       
                 if (resp.status !== 200) {
                   const msg = resp?.response?.data
                     ? `ERROR: ${resp.response.data}`
@@ -79,6 +87,10 @@ export default function ButtonAppBar(props) {
                 localStorage.setItem(JWT_NAME, resp.data.access_token);
                 localStorage.setItem(JWT_REFRESH_NAME, resp.data.refresh_token);
                 login(setUserState);
+
+                if (resp.data.is_new){
+                  navigate(`/signup`)
+                }
               }}
               onError={() => {
                 console.error("Login Failed");

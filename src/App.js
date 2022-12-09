@@ -6,10 +6,9 @@ import Nav from "./Containers/Nav/Nav";
 import UserProfile from "./Containers/User/UserProfile";
 import UserPreference from "./Containers/User/UserPreference";
 import UserContact from "./Containers/User/UserContact";
-import UserProfileEdit from "./Containers/User/UserProfileEdit";
-import UserPrefEdit from "./Containers/User/UserPrefEdit";
-import UserContactEdit from "./Containers/User/UserContactEdit";
 import ListingDetail from "./Containers/Listing/ListingDetail";
+import Logout from "./Containers/Logout";
+import Signup from "./Containers/Signup";
 import { RecoilRoot } from "recoil";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { useSetRecoilState } from "recoil";
@@ -47,9 +46,8 @@ function Message() {
 }
 
 function App() {
-  const uid = 1;
-
-  const setUserState = useSetRecoilState(userAtom);
+  const [userState, setUserState] = useRecoilState(userAtom);
+  const uid = userState?.uid;
 
   useEffect(() => {
     // check local storage oauth
@@ -58,28 +56,15 @@ function App() {
 
   return (
     <div className="App">
-      <Nav uid={uid} />
+      <Nav uid={uid}/>
       <Message />
       <Routes>
         <Route path="/" element={<LandingPage />} />
+        <Route path="/logout" element={<Logout />} />
+        <Route path="/signup" element={<Signup uid={uid}/>} />
         <Route path="/userprofile/:uid" element={<UserProfile />} />
         <Route exact path="/userpreference/:uid" element={<UserPreference />} />
         <Route exact path="/usercontact/:uid" element={<UserContact />} />
-        <Route
-          exact
-          path="/userprofile/:uid/edit"
-          element={<UserProfileEdit />}
-        />
-        <Route
-          exact
-          path="/userpreference/:uid/edit"
-          element={<UserPrefEdit />}
-        />
-        <Route
-          exact
-          path="/usercontact/:uid/edit"
-          element={<UserContactEdit />}
-        />
         <Route exact path="/listing/:lid" element={<ListingDetail />} />
       </Routes>
     </div>
