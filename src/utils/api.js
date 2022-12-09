@@ -102,6 +102,16 @@ export const APIs = {
       console.error(e);
     }
   },
+  async getOneListing(lid) {
+    try {
+      const resp = await request.get(`/listing/${lid}`);
+      return resp.data;
+    } catch (e) {
+      console.error(e);
+    }
+
+    return [];
+  },
   async getListings() {
     try {
       const resp = await request.get("/listings");

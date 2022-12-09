@@ -151,7 +151,7 @@ function UserPreference() {
                 setModalState({
                   isUploadModalOpen: false,
                 });
-                console.log("debug")
+                // console.log("debug")
                 window.location.reload();
               }}
             >

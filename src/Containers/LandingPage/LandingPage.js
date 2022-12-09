@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import ReactPaginate from "react-paginate";
 import Grid from "@mui/material/Grid";
 import "./LandingPage.css";
@@ -287,6 +288,7 @@ const LandingPage = () => {
   const setListingState = useSetRecoilState(listingAtom);
   const setModalState = useSetRecoilState(modalAtom);
   const userExp = useRecoilValue(userExpSelector);
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchlistingsState() {
@@ -347,6 +349,9 @@ const LandingPage = () => {
                     }}
                   >
                     Edit
+                  </Button>
+                  <Button variant="contained" className="w-24" onClick={()=>{navigate(`/listing/${listing.listingId}`)}}>
+                    Detail
                   </Button>
                   <Button
                     variant="contained"

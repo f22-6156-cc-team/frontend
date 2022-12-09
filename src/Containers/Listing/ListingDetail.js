@@ -1,21 +1,17 @@
 import React from 'react'
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { APIs } from '../../utils/api';
 
 export default function ListingDetail() {
-    const pathname = window.location.pathname;
+    const { lid } = useParams();
     const [listingData, setListingsData] = useState(null);
 
     useEffect(() => {
         async function fetchListingData() {
-          try {
-            const rsp = await axios.get(
-              `https://gy8a0m85ci.execute-api.us-east-1.amazonaws.com/test${pathname}`
-            );
-            setListingsData(rsp.data);
-          } catch (err) {
-            console.log(err);
-          }
+          const resp = await APIs.getOneListing(lid);
+          setListingsData(resp)
         }
         fetchListingData();
       }, []);

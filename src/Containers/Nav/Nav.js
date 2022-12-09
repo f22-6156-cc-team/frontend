@@ -37,7 +37,7 @@ export default function ButtonAppBar(props) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            App Name
+            RentalHub
           </Typography>
           <Button
             color="success"
