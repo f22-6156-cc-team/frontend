@@ -322,8 +322,8 @@ const LandingPage = () => {
             key={listing.listingId}
             className="hover:shadow-2xl shadow-md"
           >
-            <CardContent className="flex flex-col w-96">
-              <img src={listing.img} alt="preview" className="pb-2" />
+            <CardContent>
+              {/* <img src={listing.img} alt="preview" className="pb-2" /> */}
               <div className="flex justify-between items-center">
                 <h3 className="font-bold text-2xl">{listing.listingName}</h3>
                 <div className="text-sm">
