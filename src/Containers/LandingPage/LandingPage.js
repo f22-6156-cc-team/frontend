@@ -354,11 +354,11 @@ const LandingPage = () => {
                   <p><AttachMoneyIcon/>{listing.price}</p>
                 </div>
                 <div className="pt-1 pr-2 flex-1 flex flex-col items-end space-y-2">
-                  <Button variant="contained" className="w-24" onClick={()=>{navigate(`/listing/${listing.listingId}`)}}>
+                  <Button variant="outlined" className="w-24" onClick={()=>{navigate(`/listing/${listing.listingId}`)}}>
                     Detail
                   </Button>
                   <Button
-                    variant="contained"
+                    variant="outlined"
                     color="error"
                     className="w-24"
                     onClick={async () => {
