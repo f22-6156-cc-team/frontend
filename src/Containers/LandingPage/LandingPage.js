@@ -302,14 +302,14 @@ const LandingPage = () => {
   const userExp = useRecoilValue(userExpSelector);
   const navigate = useNavigate();
   const [userState, setUserState] = useRecoilState(userAtom);
-
+  async function fetchlistingsState() {
+    const data = await APIs.getListings();
+    setListingsState({
+      list: data,
+    });
+  }
   useEffect(() => {
-    async function fetchlistingsState() {
-      const data = await APIs.getListings();
-      setListingsState({
-        list: data,
-      });
-    }
+    
     fetchlistingsState();
     console.log(userState.hasLogined)
     // refetch when user updated
@@ -330,6 +330,22 @@ const LandingPage = () => {
     setListingsState({
       list: resp,
     });
+    setSnackBarState((prev) => ({
+      ...prev,
+      isOpen: true,
+      message: "Showing listing with keywords: " + query,
+      severity: "success",
+    }));
+  }
+  const handleSearchClear = async () => {
+    setQuery('');
+    fetchlistingsState();
+    setSnackBarState((prev) => ({
+      ...prev,
+      isOpen: true,
+      message: "Cleared search!",
+      severity: "success",
+    }));
   }
   if (!localStorage.getItem(JWT_NAME)) {
     return (<div> {setSnackBarState((prev) => ({
@@ -349,10 +365,14 @@ const LandingPage = () => {
                   id="standard-adornment-amount"
                   startAdornment={<InputAdornment position="start">Search</InputAdornment>}
                   placeholder="Search by listing name or address"
+                  value={query}
                   onChange={(e)=>{setQuery(e.target.value)}}
                 />
-                <Button type="submit" onClick={handleSearch}>
+                <Button variant="contained" size="medium" type="submit" onClick={handleSearch}>
                   Search
+                </Button>
+                <Button color="secondary"variant="outlined" size="medium" type="submit" onClick={handleSearchClear}>
+                  Clear
                 </Button>
             </Grid>
           </Grid>
