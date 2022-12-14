@@ -23,7 +23,13 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { Checkbox } from "@mui/material";
 import { useRecoilState } from "recoil";
-
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import DateRangeIcon from '@mui/icons-material/DateRange';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import Fab from '@mui/material/Fab';
+import AddIcon from '@mui/icons-material/Add';
+import { Typography } from '@mui/material';
+import { comment } from "postcss";
 const LISTINGS_PER_PAGE = 8;
 
 function ListingForm({ shrinkDefault }) {
@@ -142,7 +148,7 @@ function ListingModalContent() {
 
   return (
     <div
-      className="bg-white h-3/4 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg px-14 py-8 overflow-scroll"
+      className="bg-white  absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg px-14 py-8 overflow-scroll"
       style={{ width: "700px" }}
     >
       <h3 className="text-2xl">{modalState.listingModalAction}</h3>
@@ -154,7 +160,7 @@ function ListingModalContent() {
 
             const data = {
               // FIXME: what is uid in jwt
-              authorUserId: 1,
+              // authorUserId: 1,
               listingName: "listing CCCCC",
               listingAddress: "test address B",
               currentResidentsNum: 3,
@@ -201,11 +207,13 @@ function ListingModalContent() {
               list: curr.list.concat(resp),
             });
             let msg = "";
+            console.log(modalState.listingModalAction);
             if (
               modalState.listingModalAction === LISTING_MODAL_ACTIONS.UPLOAD
             ) {
               resp = await APIs.createListing(data);
               msg = `Upload listing: ${resp.listingName}`;
+              console.log(resp)
             } else if (
               modalState.listingModalAction === LISTING_MODAL_ACTIONS.EDIT
             ) {
@@ -322,75 +330,35 @@ const LandingPage = () => {
             key={listing.listingId}
             className="hover:shadow-2xl shadow-md"
           >
-            <CardContent className="flex flex-col w-96">
-              <img src={listing.img} alt="preview" className="pb-2" />
-              <div className="flex justify-between items-center">
-                <h3 className="font-bold text-2xl">{listing.listingName}</h3>
-                <div className="text-sm">
-                  {listing.startDate}-{listing.endDate}
-                </div>
-              </div>
-              <div className="flex text-start items-start">
-                <div className="pt-2 space-y-2">
-                  <p>Address: {listing.listingAddress}</p>
-                  <p>Location: {listing.locationArea}</p>
-                </div>
-                <div className="pt-1 pr-2 flex-1 flex flex-col items-end space-y-2">
-                  <Button
-                    variant="contained"
-                    className="w-24"
-                    onClick={() => {
-                      setListingState(listing);
-                      setModalState((prev) => ({
-                        ...prev,
-                        isListingModalOpen: true,
-                        listingModalAction: LISTING_MODAL_ACTIONS.EDIT,
-                      }));
-                    }}
-                  >
-                    Edit
-                  </Button>
-                  <Button variant="contained" className="w-24" onClick={()=>{navigate(`/listing/${listing.listingId}`)}}>
+            <CardContent>
+              {/* <img src={listing.img} alt="preview" className="pb-2" /> */}
+              <Grid container justifyContent="flex-start" >
+                {/* <h3 className="font-bold text-2xl"></h3> */}
+                <Typography variant="h4" >
+                {listing.listingName}
+                </Typography>
+              </Grid>
+              <Grid container justifyContent="flex-start" >
+
+              <Typography variant="overline" display="block" gutterBottom>
+                <DateRangeIcon/>{listing.startDate}-{listing.endDate}
+              </Typography>
+              </Grid>
+              <Grid container justifyContent="flex-start" >
+              <Typography variant="overline" display="block" gutterBottom>
+                <LocationOnIcon/>{listing.listingAddress},{listing.locationArea}
+              </Typography>
+              </Grid>
+              <Grid container justifyContent="flex-start" >
+              <Typography variant="h5" display="block" gutterBottom>
+                <AttachMoneyIcon/>{listing.price}
+              </Typography>
+              </Grid>
+              <Grid container justifyContent="flex-start" >
+                  <Button variant="outlined" className="w-24" onClick={()=>{navigate(`/listing/${listing.listingId}`)}}>
                     Detail
                   </Button>
-                  <Button
-                    variant="contained"
-                    color="error"
-                    className="w-24"
-                    onClick={async () => {
-                      // TODO: check user ownership
-                      const resp = await APIs.deleteListing(listing.listingId);
-                      if (resp?.status === 200) {
-                        setListingsState((prev) => ({
-                          ...prev,
-                          list: prev.list.filter(
-                            (v) => v.listingId !== listing.listingId
-                          ),
-                        }));
-                        setSnackBarState((prev) => ({
-                          ...prev,
-                          isOpen: true,
-                          message: `Delete listing: ${listing.listingName}`,
-                          severity: "success",
-                        }));
-                      } else {
-                        // error message
-                        const msg = resp?.response?.data
-                          ? `ERROR: ${resp.response.data}`
-                          : `ERROR: Failed to delete listing: ${listing.listingName}`;
-                        setSnackBarState((prev) => ({
-                          ...prev,
-                          isOpen: true,
-                          message: msg,
-                          severity: "error",
-                        }));
-                      }
-                    }}
-                  >
-                    Delete
-                  </Button>
-                </div>
-              </div>
+              </Grid>
             </CardContent>
           </Card>
         ))}

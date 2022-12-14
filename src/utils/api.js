@@ -20,7 +20,7 @@ request.interceptors.request.use((req) => {
       Authorization: `Bearer ${JWTToken}`,
     };
   }
-
+  console.log(`Bearer ${JWTToken}`)
   return req;
 });
 
@@ -72,6 +72,7 @@ export const APIs = {
   },
   async getContact(uid) {
     try {
+      console.log("in get contact, uid : " + uid);
       const rsp = await request.get(`/user/${uid}/contact`);
       return rsp.data;
     } catch (e) {
@@ -142,7 +143,7 @@ export const APIs = {
   async updateListing(listingId, data) {
     try {
       const resp = await request.put(`/listing/${listingId}`, data);
-
+      console.log(resp)
       return {
         ...resp.data,
         img: faker.image.imageUrl(250, 140, "city", true),
