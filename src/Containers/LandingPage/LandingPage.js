@@ -28,6 +28,7 @@ import DateRangeIcon from '@mui/icons-material/DateRange';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
+import { comment } from "postcss";
 const LISTINGS_PER_PAGE = 8;
 
 function ListingForm({ shrinkDefault }) {
@@ -205,11 +206,13 @@ function ListingModalContent() {
               list: curr.list.concat(resp),
             });
             let msg = "";
+            console.log(modalState.listingModalAction);
             if (
               modalState.listingModalAction === LISTING_MODAL_ACTIONS.UPLOAD
             ) {
               resp = await APIs.createListing(data);
               msg = `Upload listing: ${resp.listingName}`;
+              console.log(resp)
             } else if (
               modalState.listingModalAction === LISTING_MODAL_ACTIONS.EDIT
             ) {
@@ -324,6 +327,7 @@ const LandingPage = () => {
            onClick={() => {
             setModalState({
               isListingModalOpen: true,
+              listingModalAction: LISTING_MODAL_ACTIONS.UPLOAD
             });
           }}>
             <AddIcon />Create Listing

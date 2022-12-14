@@ -295,7 +295,7 @@ export default function ListingDetail(props) {
     <Container maxWidth="md">
     <Card>
       <CardContent>
-        <Grid container spacing={2}>
+        <Grid container spacing={2} justifyContent="flex-start">
           <Grid item md={8}>
             <Typography gutterBottom variant="h2" component="div">
               {listingData?.listingName}

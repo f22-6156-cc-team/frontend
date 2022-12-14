@@ -7,7 +7,7 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useSetRecoilState, useRecoilState } from "recoil";
-import { modalAtom, snackBarAtom, userAtom } from "../../utils/store";
+import { LISTING_MODAL_ACTIONS, modalAtom, snackBarAtom, userAtom } from "../../utils/store";
 import { GoogleLogin } from "@react-oauth/google";
 import { GOOGLE_JWT_NAME, JWT_NAME, JWT_REFRESH_NAME } from "../../utils/const";
 import { login } from "../../utils/login";
@@ -39,18 +39,19 @@ export default function ButtonAppBar(props) {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             RentalHub
           </Typography>
-          {/* <Button
+          <Button
             color="success"
             variant="contained"
             className="mr-2"
             onClick={() => {
               setModalAtom({
                 isListingModalOpen: true,
+                listingModalAction: LISTING_MODAL_ACTIONS.UPLOAD
               });
             }}
           >
-            Upload
-          </Button> */}
+            Create Listing
+          </Button>
           <Button href={homeUrl} color="inherit">
             Home
           </Button>
