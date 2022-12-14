@@ -39,7 +39,8 @@ export default function ButtonAppBar(props) {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             RentalHub
           </Typography>
-          <Button
+          
+          {userState.hasLogined ? (<Button
             color="success"
             variant="contained"
             className="mr-2"
@@ -52,15 +53,18 @@ export default function ButtonAppBar(props) {
           >
             Create Listing
           </Button>
-          <Button href={homeUrl} color="inherit">
+          ):(<div></div>)}
+          
+          {userState.hasLogined ? (<Button href={homeUrl} color="inherit">
             Home
-          </Button>
+          </Button>) : (<div></div>)}
+         
           {userState.hasLogined ? (
             <div>
               <Button href={userProfileUrl} color="inherit">
               {userState.name}
               </Button>
-              <Button color="inherit" onClick={()=>{Logout(setUserState)}}>
+              <Button color="inherit" onClick={()=>{Logout(setUserState); navigate("/")}}>
                 Logout
               </Button>
             </div>

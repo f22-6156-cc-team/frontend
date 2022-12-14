@@ -10,7 +10,7 @@ import { useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { listingsAtom, modalAtom } from "../../utils/store";
+import { listingsAtom, modalAtom, snackBarAtom } from "../../utils/store";
 import { TextField } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -23,6 +23,7 @@ function UserProfile (props) {
   const [userProfile, setUserProfile] = useState(null);
   const modalState = useRecoilValue(modalAtom);
   const setModalState = useSetRecoilState(modalAtom);
+  const setSnackBarState = useSetRecoilState(snackBarAtom);
 
   function EditForm() {
     return (
@@ -51,15 +52,21 @@ function UserProfile (props) {
               });
                 const resp = await APIs.editUser(uid, data);
                 console.log(resp);
-                if (resp) {
-                  window.profile = true;
-                }else {
-                  window.profile = false;
-                }
   
                 setModalState({
                   isUploadModalOpen: false,
                 });
+
+                if(resp){
+                  window.location.reload();
+                }else{
+                  setSnackBarState((prev) => ({
+                    ...prev,
+                    isOpen: true,
+                    message: "Invalid Input",
+                    severity: "warning",
+                  }));
+                }
               }}
             >
               <div className="grid grid-cols-2 gap-12">
@@ -93,7 +100,7 @@ function UserProfile (props) {
       setUserProfile(resp);
     }
     fetchUserData();
-  }, [window.profile]);
+  }, []);
 
   return (
     <div className="flex">
