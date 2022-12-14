@@ -31,6 +31,7 @@ import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
 import { Typography } from '@mui/material';
 import { comment } from "postcss";
+import { JWT_NAME } from "../../utils/const";
 const LISTINGS_PER_PAGE = 8;
 
 function ListingForm({ shrinkDefault }) {
@@ -308,7 +309,7 @@ const LandingPage = () => {
       });
     }
     fetchlistingsState();
-
+    console.log(userState.hasLogined)
     // refetch when user updated
   }, [userExp]);
 
@@ -324,7 +325,7 @@ const LandingPage = () => {
 
   return (
     <div>
-      {userState.hasLogined ? (
+      {localStorage.getItem(JWT_NAME) ? (
       <div className="flex flex-col">
       <Grid className="m-auto grid grid-cols-4 gap-8 p-8 pt-16">
         {/* <ListingContainer listingsState={currentPageData}/> */}
