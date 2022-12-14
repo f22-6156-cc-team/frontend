@@ -95,9 +95,26 @@ export const APIs = {
       console.error(e);
     }
   },
+  async deleteEmail(uid, eid) {
+    try {
+      const resp = await request.delete(`/user/${uid}/contact/email/${eid}`);
+      return resp.data;
+    } catch (e) {
+      console.error(e);
+      return e;
+    }
+  },
   async createPhone(uid, data) {
     try {
       const rsp = await request.post(`/user/${uid}/contact/phone`, data);
+      return rsp.data;
+    } catch (e) {
+      console.error(e);
+    }
+  },
+  async deletePhone(uid, pid) {
+    try {
+      const rsp = await request.delete(`/user/${uid}/contact/phone/${pid}`);
       return rsp.data;
     } catch (e) {
       console.error(e);
