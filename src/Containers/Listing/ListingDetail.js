@@ -39,9 +39,6 @@ import {
 } from "../../utils/store";
 
 
-
-
-
 export default function ListingDetail(props) {
     const { lid } = useParams();
     const [listingData, setListingsData] = useState(null);
@@ -137,9 +134,19 @@ export default function ListingDetail(props) {
                     data[item.id] = parseInt(item.value);
                     return;
                   }
-    
                   data[item.id] = item.value;
                 });
+
+                const addr = data['listingAddress'];
+                APIs.getValidatedAddress(addr).then(resp => {
+                  console.log(resp);
+                  setSnackBarState((prev) => ({
+                    ...prev,
+                    isOpen: true,
+                    message: 'please enter the formatted address: ' + resp?.result.address.formattedAddress,
+                    severity: "success",
+                  })
+                )});            
     
                 // TODO: edit
                 let resp;
@@ -153,9 +160,10 @@ export default function ListingDetail(props) {
                 } else if (
                   modalState.listingModalAction === LISTING_MODAL_ACTIONS.EDIT
                 ) {
+                  console.log("data before", data);
                   resp = await APIs.updateListing(listingData.listingId, data);
                   console.log(listingData);
-                  console.log(resp)
+                  console.log("update resp", resp)
                   msg = `Update listing: ${resp?.listingName}`;
                 } else {
                   throw new Error("Not Implemented");

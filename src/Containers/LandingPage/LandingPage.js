@@ -201,12 +201,7 @@ function ListingModalContent() {
               }
 
               data[item.id] = item.value;
-            });
-            // validate addr
-            const addr = data['listingAddress'];
-            const rsp = APIs.getValidatedAddress(addr);
-            console.log(rsp);
-            return;
+            });   
 
             // TODO: edit
             let resp;
@@ -222,7 +217,7 @@ function ListingModalContent() {
             ) {
               resp = await APIs.createListing(data);
               msg = `Upload listing: ${resp.listingName}`;
-              console.log(resp)
+              console.log(resp);
             } else if (
               modalState.listingModalAction === LISTING_MODAL_ACTIONS.EDIT
             ) {
