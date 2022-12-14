@@ -1,7 +1,5 @@
 import Axios from "axios";
-import { faker } from "@faker-js/faker";
 import { JWT_NAME } from "./const";
-import { CoPresentOutlined } from "@mui/icons-material";
 
 export const request = Axios.create({
   baseURL: process.env.REACT_APP_BASE_URL,
@@ -130,13 +128,21 @@ export const APIs = {
 
     return [];
   },
-  async getListings() {
+  async getListings(query=null) {
     try {
+      if (query) {
+        const resp = await request.get("/listings", {
+          params: {
+            listingName: query,
+            listingAddress: query
+          }
+        });
+        return resp.data;
+      }
       const resp = await request.get("/listings");
 
       return resp.data.map((v) => ({
         ...v,
-        img: faker.image.imageUrl(250, 140, "city", true),
       }));
     } catch (e) {
       console.error(e);
@@ -150,7 +156,6 @@ export const APIs = {
 
       return {
         ...resp.data,
-        img: faker.image.imageUrl(250, 140, "city", true),
       };
     } catch (e) {
       console.error(e);
@@ -163,7 +168,6 @@ export const APIs = {
       console.log(resp)
       return {
         ...resp.data,
-        img: faker.image.imageUrl(250, 140, "city", true),
       };
     } catch (e) {
       console.error(e);

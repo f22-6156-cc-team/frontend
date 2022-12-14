@@ -27,9 +27,11 @@ import { useRecoilState } from "recoil";
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import Fab from '@mui/material/Fab';
-import AddIcon from '@mui/icons-material/Add';
 import { Typography } from '@mui/material';
+
+import FormControl from "@mui/material/FormControl";
+import Input from "@mui/material/Input";
+import InputAdornment from "@mui/material/InputAdornment";
 import { comment } from "postcss";
 import { JWT_NAME } from "../../utils/const";
 const LISTINGS_PER_PAGE = 8;
@@ -314,6 +316,7 @@ const LandingPage = () => {
   }, [userExp]);
 
   const [currPage, setCurrPage] = useState(0);
+  const [query, setQuery] = useState(null);
   const start = currPage * LISTINGS_PER_PAGE;
   const end = start + LISTINGS_PER_PAGE;
   const currentPageData = listingsState.list.slice(start, end);
@@ -322,11 +325,40 @@ const LandingPage = () => {
   function handlePageClick({ selected: selectedPage }) {
     setCurrPage(selectedPage);
   }
-
+  const handleSearch = async () => {
+    const resp = await APIs.getListings(query);
+    setListingsState({
+      list: resp,
+    });
+  }
+  if (!localStorage.getItem(JWT_NAME)) {
+    return (<div> {setSnackBarState((prev) => ({
+      ...prev,
+      isOpen: true,
+      message: "Click on the top right button to login with google",
+      severity: "success",
+    }))} </div>);
+  }
   return (
-    <div>
-      {localStorage.getItem(JWT_NAME) ? (
-      <div className="flex flex-col">
+  
+    <div className="flex flex-col">
+       <FormControl sx={{ m: 1 }} variant="standard">
+          <Grid  container>
+            <Grid fullWidth item md={10}>
+                <Input
+                  id="standard-adornment-amount"
+                  startAdornment={<InputAdornment position="start">Search</InputAdornment>}
+                  placeholder="Search by listing name or address"
+                  onChange={(e)=>{setQuery(e.target.value)}}
+                />
+                <Button type="submit" onClick={handleSearch}>
+                  Search
+                </Button>
+            </Grid>
+          </Grid>
+          
+        </FormControl>
+      
       <Grid className="m-auto grid grid-cols-4 gap-8 p-8 pt-16">
         {/* <ListingContainer listingsState={currentPageData}/> */}
         {currentPageData.map((listing) => (
@@ -386,15 +418,7 @@ const LandingPage = () => {
         </Grid>
       </Grid>
       <ListingModal />
-      </div>
-      ) : (<div> {setSnackBarState((prev) => ({
-        ...prev,
-        isOpen: true,
-        message: "Click on the top right button to login with google",
-        severity: "success",
-      }))} </div>)}
-    </div>
-    
+      </div> 
   );
 };
 
