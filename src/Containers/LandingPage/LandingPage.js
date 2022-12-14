@@ -1,4 +1,4 @@
-import React, { useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ReactPaginate from "react-paginate";
 import Grid from "@mui/material/Grid";
@@ -40,8 +40,8 @@ function ListingForm({ shrinkDefault }) {
     <>
       {[
         "listingName",
-        "locationArea",
         "listingAddress",
+        "locationArea",
         "washerDryerLocation",
       ].map((label) => (
         <TextField
