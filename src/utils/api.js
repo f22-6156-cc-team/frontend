@@ -143,8 +143,9 @@ export const APIs = {
   },
   async updateListing(listingId, data) {
     try {
+      console.log('in api', data);
       const resp = await request.put(`/listing/${listingId}`, data);
-      console.log(resp)
+      console.log('in api resp', resp)
       return {
         ...resp.data,
         img: faker.image.imageUrl(250, 140, "city", true),
@@ -211,8 +212,11 @@ export const APIs = {
                 'addressLines': addressLines
             }
           })  
-        });
-        return resp;
+        })
+        // .then((resp) => resp.json())
+        // .then((resp) => console.log('resp', resp))
+        // .then((resp) => {return resp;})
+        return resp.json();
       } catch (e) {
         console.error(e);
         return e;
