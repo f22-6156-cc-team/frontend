@@ -386,7 +386,7 @@ const LandingPage = () => {
       </Grid>
       <ListingModal />
       </div>
-      ) : (<div>Please Login!</div>)}
+      ) : (<div> <Typography variant="h3" component="div"> Click on the top right button to login with google! </Typography> </div>)}
     </div>
     
   );
