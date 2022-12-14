@@ -44,8 +44,8 @@ function ListingForm({ shrinkDefault }) {
     <>
       {[
         "listingName",
-        "listingAddress",
         "locationArea",
+        "listingAddress",
         "washerDryerLocation",
       ].map((label) => (
         <TextField
@@ -60,6 +60,13 @@ function ListingForm({ shrinkDefault }) {
           {...(shrinkDefault && { InputLabelProps: { shrink: true } })}
         />
       ))}
+      <Grid container>
+      <Button
+      variant="outlined"
+      >
+        Validate Addr
+      </Button>
+      </Grid>
       {[
         "currentResidentsNum",
         "totalResidentsNum",
@@ -202,6 +209,10 @@ function ListingModalContent() {
 
               data[item.id] = item.value;
             });
+            // validate address
+            const addr = data["listingAddress"];
+            const validatedAddr = APIs.getValidatedAddress(addr);
+            
 
             // TODO: edit
             let resp;
