@@ -145,7 +145,6 @@ export const APIs = {
       console.log(resp)
       return {
         ...resp.data,
-        ...resp.status,
         img: faker.image.imageUrl(250, 140, "city", true),
       };
     } catch (e) {

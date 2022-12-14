@@ -149,7 +149,7 @@ export default function ListingDetail(props) {
                   resp = await APIs.updateListing(listingData.listingId, data);
                   console.log(listingData);
                   console.log(resp)
-                  msg = `Update listing: ${resp.listingName}`;
+                  msg = `Update listing: ${resp?.listingName}`;
                 } else {
                   throw new Error("Not Implemented");
                 }
@@ -161,6 +161,13 @@ export default function ListingDetail(props) {
                     isOpen: true,
                     message: msg,
                     severity: "success",
+                  }));
+                } else {
+                  setSnackBarState((prev) => ({
+                    ...prev,
+                    isOpen: true,
+                    message: "error occured",
+                    severity: "warning",
                   }));
                 }
     
