@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef} from "react";
 import { useNavigate } from "react-router-dom";
 import ReactPaginate from "react-paginate";
 import Grid from "@mui/material/Grid";
@@ -60,13 +60,14 @@ function ListingForm({ shrinkDefault }) {
           {...(shrinkDefault && { InputLabelProps: { shrink: true } })}
         />
       ))}
-      <Grid container>
+      {/* <Grid container>
       <Button
       variant="outlined"
+      onClick={handleValidateAddr}
       >
         Validate Addr
       </Button>
-      </Grid>
+      </Grid> */}
       {[
         "currentResidentsNum",
         "totalResidentsNum",
@@ -209,10 +210,11 @@ function ListingModalContent() {
 
               data[item.id] = item.value;
             });
-            // validate address
-            const addr = data["listingAddress"];
-            const validatedAddr = APIs.getValidatedAddress(addr);
-            
+            // validate addr
+            const addr = data['listingAddress'];
+            const rsp = APIs.getValidatedAddress(addr);
+            console.log(rsp);
+            return;
 
             // TODO: edit
             let resp;
