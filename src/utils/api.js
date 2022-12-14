@@ -3,6 +3,7 @@ import { faker } from "@faker-js/faker";
 import { JWT_NAME } from "./const";
 import { CoPresentOutlined } from "@mui/icons-material";
 
+const GOOGLE_PLACES_API = "https://addressvalidation.googleapis.com/v1:validateAddress?key=AIzaSyC_bgUWAymO0NfPmyDkz9H2V_M1VMmOtT0";
 export const request = Axios.create({
   baseURL: process.env.REACT_APP_BASE_URL,
 });
@@ -197,4 +198,26 @@ export const APIs = {
       return e;
     }
   },
+  async getValidatedAddress(addressLines) {
+    if (addressLines) {
+      try {
+        const resp = await fetch(`${GOOGLE_PLACES_API}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            'address': {
+                'addressLines': addressLines
+            }
+          })  
+        });
+        return resp;
+      } catch (e) {
+        console.error(e);
+        return e;
+      }
+    }
+    return null;
+  }
 };
