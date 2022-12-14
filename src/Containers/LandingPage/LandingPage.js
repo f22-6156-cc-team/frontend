@@ -322,23 +322,8 @@ const LandingPage = () => {
 
   return (
     <div className="flex flex-col">
-      <Grid item container justifyContent="flex-end">
-        <Grid item md={2} justifyContent="flex-end">
-          <Fab variant="extended" color="success" aria-label="add"
-           onClick={() => {
-            setModalState({
-              isListingModalOpen: true,
-              listingModalAction: LISTING_MODAL_ACTIONS.UPLOAD
-            });
-          }}>
-            <AddIcon />Create Listing
-          </Fab>
-        </Grid>
-      </Grid>
       <Grid className="m-auto grid grid-cols-4 gap-8 p-8 pt-16">
         {/* <ListingContainer listingsState={currentPageData}/> */}
-        
-        
         {currentPageData.map((listing) => (
           <Card
             variant="outlined"
@@ -369,50 +354,6 @@ const LandingPage = () => {
                 <AttachMoneyIcon/>{listing.price}
               </Typography>
               </Grid>
-              {/* <div className="flex text-start items-start">
-                <div className="pt-2 space-y-2">
-                  <p><AttachMoneyIcon/>{listing.price}</p>
-                </div>
-                <div className="pt-1 pr-2 flex-1 flex flex-col items-end space-y-2">
-                   */}
-                  {/* <Button
-                    variant="outlined"
-                    color="error"
-                    className="w-24"
-                    onClick={async () => {
-                      // TODO: check user ownership
-                      const resp = await APIs.deleteListing(listing.listingId);
-                      if (resp?.status === 200) {
-                        setListingsState((prev) => ({
-                          ...prev,
-                          list: prev.list.filter(
-                            (v) => v.listingId !== listing.listingId
-                          ),
-                        }));
-                        setSnackBarState((prev) => ({
-                          ...prev,
-                          isOpen: true,
-                          message: `Delete listing: ${listing.listingName}`,
-                          severity: "success",
-                        }));
-                      } else {
-                        // error message
-                        const msg = resp?.response?.data
-                          ? `ERROR: ${resp.response.data}`
-                          : `ERROR: Failed to delete listing: ${listing.listingName}`;
-                        setSnackBarState((prev) => ({
-                          ...prev,
-                          isOpen: true,
-                          message: msg,
-                          severity: "error",
-                        }));
-                      }
-                    }}
-                  >
-                    Delete
-                  </Button> */}
-                {/* </div>
-              </div> */}
               <Grid container justifyContent="flex-start" >
                   <Button variant="outlined" className="w-24" onClick={()=>{navigate(`/listing/${listing.listingId}`)}}>
                     Detail

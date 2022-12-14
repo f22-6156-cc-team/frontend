@@ -19,6 +19,7 @@ import PetsIcon from '@mui/icons-material/Pets';
 import SmokingRoomsIcon from '@mui/icons-material/SmokingRooms';
 import SmokeFreeIcon from '@mui/icons-material/SmokeFree';
 import ToggleOffIcon from '@mui/icons-material/ToggleOff';
+import ContactMailIcon from '@mui/icons-material/ContactMail';
 import ToggleOnIcon from '@mui/icons-material/ToggleOn';
 import { TextField } from "@mui/material";
 import { FormControlLabel } from "@mui/material";
@@ -43,12 +44,13 @@ import {
 export default function ListingDetail(props) {
     const { lid } = useParams();
     const [listingData, setListingsData] = useState(null);
+    const [userContactData, setUserContactData] = useState(null);
     const setListingState = useSetRecoilState(listingAtom);
     const setModalState = useSetRecoilState(modalAtom);
     const setSnackBarState = useSetRecoilState(snackBarAtom);
     const viewerUid = props.userState.uid;
     const navigate = useNavigate();
-  
+    const isViewerOwner = props.userState.uid == listingData?.authorUserId;
     function ListingModalContent() {
       /** upload or edit */
       const modalState = useRecoilValue(modalAtom);
@@ -295,6 +297,13 @@ export default function ListingDetail(props) {
         </Modal>
       );
     }
+    const Mailto = ({ email, subject, body, children }) => {
+      return (
+        <Button variant="outlined" 
+        startIcon={<ContactMailIcon />}
+        color="success" href={`mailto:${email}?subject=${encodeURIComponent(subject) || ''}&body=${encodeURIComponent(body) || ''}`}>{children}</Button>
+      );
+    };
     useEffect(() => {
         async function fetchListingData() {
           const resp = await APIs.getOneListing(lid);
@@ -302,6 +311,16 @@ export default function ListingDetail(props) {
         }
         fetchListingData();
       }, [setListingState]);
+    useEffect(() => {
+    async function fetchUserContactData(uid) {
+      if (!uid || userContactData) {
+        return;
+      }
+      const data = await APIs.getContact(uid);
+      console.log(data);
+      setUserContactData(data);
+    }
+    fetchUserContactData(listingData?.authorUserId);}, [listingData, setListingsData]);
   if (!listingData) {
     return "Listing does not exist."
   }
@@ -361,8 +380,9 @@ export default function ListingDetail(props) {
 
       <CardActions>
         <Button variant="outlined"
-          onClick={() => navigate(-1)}>Back to list</Button>
-        {viewerUid == listingData.authorUserId &&
+          onClick={() => navigate(-1)}>Back to list
+        </Button>
+        {isViewerOwner &&
         <>
         <Button variant="outlined" 
           onClick={() => {
@@ -406,8 +426,13 @@ export default function ListingDetail(props) {
           }}
           >
           Delete
-        </Button>
+        </Button> 
         </>
+        }
+        {!isViewerOwner && userContactData && 
+        <Mailto email={userContactData?.emails[0]?.address} subject="Hello & Welcome" body="Hi! I was wondering if your listing is still available? I'm interested in it.">
+          Contact Owner!
+        </Mailto>
         }
       </CardActions>
     </Card>
