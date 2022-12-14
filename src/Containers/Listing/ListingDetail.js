@@ -99,7 +99,7 @@ export default function ListingDetail(props) {
             <form
               onSubmit={async (event) => {
                 event.preventDefault();
-    
+
                 const data = {
                   // FIXME: what is uid in jwt
                   authorUserId: 1,
