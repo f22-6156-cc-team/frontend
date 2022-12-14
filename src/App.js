@@ -59,13 +59,13 @@ function App() {
       <Nav uid={uid}/>
       <Message />
       <Routes>
-        <Route path="/" element={<LandingPage />} />
+        <Route path="/" element={<LandingPage/>} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/signup" element={<Signup uid={uid}/>} />
         <Route path="/userprofile/:uid" element={<UserProfile />} />
         <Route exact path="/userpreference/:uid" element={<UserPreference />} />
         <Route exact path="/usercontact/:uid" element={<UserContact />} />
-        <Route exact path="/listing/:lid" element={<ListingDetail />} />
+        <Route exact path="/listing/:lid" element={<ListingDetail  userState={userState}/>} />
       </Routes>
     </div>
   );

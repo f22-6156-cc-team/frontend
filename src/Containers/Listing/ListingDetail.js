@@ -2,7 +2,7 @@ import React from 'react'
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { APIs } from '../../utils/api';
 import { Grid,Container, Paper, Card, CardMedia, CardContent, Typography, CardActions, Button, Modal } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -46,6 +46,9 @@ export default function ListingDetail(props) {
     const setListingState = useSetRecoilState(listingAtom);
     const setModalState = useSetRecoilState(modalAtom);
     const setSnackBarState = useSetRecoilState(snackBarAtom);
+    const viewerUid = props.userState.uid;
+    const navigate = useNavigate();
+  
     function ListingModalContent() {
       /** upload or edit */
       const modalState = useRecoilValue(modalAtom);
@@ -357,7 +360,10 @@ export default function ListingDetail(props) {
       </CardContent>
 
       <CardActions>
-        <Button  href="/" variant="outlined">Back to list</Button>
+        <Button variant="outlined"
+          onClick={() => navigate(-1)}>Back to list</Button>
+        {viewerUid == listingData.authorUserId &&
+        <>
         <Button variant="outlined" 
           onClick={() => {
             setListingState(listingData);
@@ -401,6 +407,8 @@ export default function ListingDetail(props) {
           >
           Delete
         </Button>
+        </>
+        }
       </CardActions>
     </Card>
     <ListingModal />
