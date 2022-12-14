@@ -386,7 +386,12 @@ const LandingPage = () => {
       </Grid>
       <ListingModal />
       </div>
-      ) : (<div> <Typography variant="h3" component="div"> Click on the top right button to login with google! </Typography> </div>)}
+      ) : (<div> {setSnackBarState((prev) => ({
+        ...prev,
+        isOpen: true,
+        message: "Click on the top right button to login with google",
+        severity: "success",
+      }))} </div>)}
     </div>
     
   );
