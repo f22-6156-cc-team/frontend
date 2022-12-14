@@ -15,6 +15,7 @@ import {
   modalAtom,
   snackBarAtom,
   userExpSelector,
+  userAtom
 } from "../../utils/store";
 import { TextField } from "@mui/material";
 import { FormControlLabel } from "@mui/material";
@@ -297,6 +298,7 @@ const LandingPage = () => {
   const setModalState = useSetRecoilState(modalAtom);
   const userExp = useRecoilValue(userExpSelector);
   const navigate = useNavigate();
+  const [userState, setUserState] = useRecoilState(userAtom);
 
   useEffect(() => {
     async function fetchlistingsState() {
@@ -321,67 +323,70 @@ const LandingPage = () => {
   }
 
   return (
-    <div className="flex flex-col">
-      <Grid className="m-auto grid grid-cols-4 gap-8 p-8 pt-16">
-        {/* <ListingContainer listingsState={currentPageData}/> */}
-        {currentPageData.map((listing) => (
-          <Card
-            variant="outlined"
-            key={listing.listingId}
-            className="hover:shadow-2xl shadow-md"
-          >
-            <CardContent>
-              {/* <img src={listing.img} alt="preview" className="pb-2" /> */}
-              <Grid container justifyContent="flex-start" >
-                {/* <h3 className="font-bold text-2xl"></h3> */}
-                <Typography variant="h4" >
-                {listing.listingName}
-                </Typography>
-              </Grid>
-              <Grid container justifyContent="flex-start" >
+    <div>
+      {userState.hasLogined ? (<div className="flex flex-col">
+    <Grid className="m-auto grid grid-cols-4 gap-8 p-8 pt-16">
+      {/* <ListingContainer listingsState={currentPageData}/> */}
+      {currentPageData.map((listing) => (
+        <Card
+          variant="outlined"
+          key={listing.listingId}
+          className="hover:shadow-2xl shadow-md"
+        >
+          <CardContent>
+            {/* <img src={listing.img} alt="preview" className="pb-2" /> */}
+            <Grid container justifyContent="flex-start" >
+              {/* <h3 className="font-bold text-2xl"></h3> */}
+              <Typography variant="h4" >
+              {listing.listingName}
+              </Typography>
+            </Grid>
+            <Grid container justifyContent="flex-start" >
 
-              <Typography variant="overline" display="block" gutterBottom>
-                <DateRangeIcon/>{listing.startDate}-{listing.endDate}
-              </Typography>
-              </Grid>
-              <Grid container justifyContent="flex-start" >
-              <Typography variant="overline" display="block" gutterBottom>
-                <LocationOnIcon/>{listing.listingAddress},{listing.locationArea}
-              </Typography>
-              </Grid>
-              <Grid container justifyContent="flex-start" >
-              <Typography variant="h5" display="block" gutterBottom>
-                <AttachMoneyIcon/>{listing.price}
-              </Typography>
-              </Grid>
-              <Grid container justifyContent="flex-start" >
-                  <Button variant="outlined" className="w-24" onClick={()=>{navigate(`/listing/${listing.listingId}`)}}>
-                    Detail
-                  </Button>
-              </Grid>
-            </CardContent>
-          </Card>
-        ))}
+            <Typography variant="overline" display="block" gutterBottom>
+              <DateRangeIcon/>{listing.startDate}-{listing.endDate}
+            </Typography>
+            </Grid>
+            <Grid container justifyContent="flex-start" >
+            <Typography variant="overline" display="block" gutterBottom>
+              <LocationOnIcon/>{listing.listingAddress},{listing.locationArea}
+            </Typography>
+            </Grid>
+            <Grid container justifyContent="flex-start" >
+            <Typography variant="h5" display="block" gutterBottom>
+              <AttachMoneyIcon/>{listing.price}
+            </Typography>
+            </Grid>
+            <Grid container justifyContent="flex-start" >
+                <Button variant="outlined" className="w-24" onClick={()=>{navigate(`/listing/${listing.listingId}`)}}>
+                  Detail
+                </Button>
+            </Grid>
+          </CardContent>
+        </Card>
+      ))}
+    </Grid>
+    <Grid item container>
+      <Grid item xs={12} sm={6} className="pagination">
+        <ReactPaginate
+          breakLabel="..."
+          nextLabel={">"}
+          onPageChange={handlePageClick}
+          pageRangeDisplayed={5}
+          pageCount={pageCount}
+          previousLabel={"<"}
+          containerClassName={"pagination"}
+          previousLinkClassName={"pagination__link"}
+          nextLinkClassName={"pagination__link"}
+          disabledClassName={"pagination__link--disabled"}
+          activeClassName={"pagination__link--active"}
+        />
       </Grid>
-      <Grid item container>
-        <Grid item xs={12} sm={6} className="pagination">
-          <ReactPaginate
-            breakLabel="..."
-            nextLabel={">"}
-            onPageChange={handlePageClick}
-            pageRangeDisplayed={5}
-            pageCount={pageCount}
-            previousLabel={"<"}
-            containerClassName={"pagination"}
-            previousLinkClassName={"pagination__link"}
-            nextLinkClassName={"pagination__link"}
-            disabledClassName={"pagination__link--disabled"}
-            activeClassName={"pagination__link--active"}
-          />
-        </Grid>
-      </Grid>
-      <ListingModal />
+    </Grid>
+    <ListingModal />
+  </div>) : (<div>Please Login!</div>)}
     </div>
+    
   );
 };
 

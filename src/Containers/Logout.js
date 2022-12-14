@@ -8,6 +8,7 @@ export default function Logout(setUserState) {
     localStorage.removeItem(GOOGLE_JWT_NAME);
     localStorage.removeItem(JWT_NAME);
     localStorage.removeItem(JWT_REFRESH_NAME);
+
     return (
         <Container>
             You've just logged out.
