@@ -28,6 +28,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { Checkbox } from "@mui/material";
 import { useRecoilState } from "recoil";
+import Badge from '@mui/material/Badge';
 import {
   LISTING_MODAL_ACTIONS,
   listingAtom,
@@ -321,6 +322,7 @@ export default function ListingDetail(props) {
       setUserContactData(data);
     }
     fetchUserContactData(listingData?.authorUserId);}, [listingData, setListingsData]);
+    const badgeContent = isViewerOwner ? "Your listing" : null;
   if (!listingData) {
     return "Listing does not exist."
   }
@@ -330,9 +332,11 @@ export default function ListingDetail(props) {
       <CardContent>
         <Grid container spacing={2} justifyContent="flex-start">
           <Grid item md={8}>
+          <Badge badgeContent={badgeContent} color="primary">
             <Typography gutterBottom variant="h2" component="div">
               {listingData?.listingName}
             </Typography>
+          </Badge>
           </Grid>
           <Grid item md={4}>
             <Typography gutterBottom variant="h5" component="div">
