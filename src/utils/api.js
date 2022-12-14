@@ -20,6 +20,7 @@ request.interceptors.request.use((req) => {
       Authorization: `Bearer ${JWTToken}`,
     };
   }
+  console.log(`Bearer ${JWTToken}`)
   return req;
 });
 

@@ -28,6 +28,7 @@ import DateRangeIcon from '@mui/icons-material/DateRange';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
+import { Typography } from '@mui/material';
 import { comment } from "postcss";
 const LISTINGS_PER_PAGE = 8;
 
@@ -159,7 +160,7 @@ function ListingModalContent() {
 
             const data = {
               // FIXME: what is uid in jwt
-              authorUserId: 1,
+              // authorUserId: 1,
               listingName: "listing CCCCC",
               listingAddress: "test address B",
               currentResidentsNum: 3,
@@ -346,22 +347,35 @@ const LandingPage = () => {
           >
             <CardContent>
               {/* <img src={listing.img} alt="preview" className="pb-2" /> */}
-              <div className="flex justify-between items-center">
-                <h3 className="font-bold text-2xl">{listing.listingName}</h3>
-                <div className="text-sm">
-                  <DateRangeIcon/>{listing.startDate}-{listing.endDate}
-                </div>
-              </div>
-              <div className="flex text-start items-start">
+              <Grid container justifyContent="flex-start" >
+                {/* <h3 className="font-bold text-2xl"></h3> */}
+                <Typography variant="h4" >
+                {listing.listingName}
+                </Typography>
+              </Grid>
+              <Grid container justifyContent="flex-start" >
+
+              <Typography variant="overline" display="block" gutterBottom>
+                <DateRangeIcon/>{listing.startDate}-{listing.endDate}
+              </Typography>
+              </Grid>
+              <Grid container justifyContent="flex-start" >
+              <Typography variant="overline" display="block" gutterBottom>
+                <LocationOnIcon/>{listing.listingAddress},{listing.locationArea}
+              </Typography>
+              </Grid>
+              <Grid container justifyContent="flex-start" >
+              <Typography variant="h5" display="block" gutterBottom>
+                <AttachMoneyIcon/>{listing.price}
+              </Typography>
+              </Grid>
+              {/* <div className="flex text-start items-start">
                 <div className="pt-2 space-y-2">
-                  <p><LocationOnIcon/>{listing.listingAddress},{listing.locationArea}</p>
                   <p><AttachMoneyIcon/>{listing.price}</p>
                 </div>
                 <div className="pt-1 pr-2 flex-1 flex flex-col items-end space-y-2">
-                  <Button variant="outlined" className="w-24" onClick={()=>{navigate(`/listing/${listing.listingId}`)}}>
-                    Detail
-                  </Button>
-                  <Button
+                   */}
+                  {/* <Button
                     variant="outlined"
                     color="error"
                     className="w-24"
@@ -396,9 +410,14 @@ const LandingPage = () => {
                     }}
                   >
                     Delete
+                  </Button> */}
+                {/* </div>
+              </div> */}
+              <Grid container justifyContent="flex-start" >
+                  <Button variant="outlined" className="w-24" onClick={()=>{navigate(`/listing/${listing.listingId}`)}}>
+                    Detail
                   </Button>
-                </div>
-              </div>
+              </Grid>
             </CardContent>
           </Card>
         ))}

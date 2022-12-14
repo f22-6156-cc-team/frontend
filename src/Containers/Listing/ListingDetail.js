@@ -45,13 +45,14 @@ export default function ListingDetail(props) {
     const [listingData, setListingsData] = useState(null);
     const setListingState = useSetRecoilState(listingAtom);
     const setModalState = useSetRecoilState(modalAtom);
+    const setSnackBarState = useSetRecoilState(snackBarAtom);
     function ListingModalContent() {
       /** upload or edit */
       const modalState = useRecoilValue(modalAtom);
       const listingState = useRecoilValue(listingAtom);
       const setModalState = useSetRecoilState(modalAtom);
       const setListingsState = useSetRecoilState(listingsAtom);
-      const setSnackBarState = useSetRecoilState(snackBarAtom);
+      
     
       useEffect(() => {
         if (modalState.listingModalAction !== LISTING_MODAL_ACTIONS.EDIT) {
@@ -155,6 +156,7 @@ export default function ListingDetail(props) {
                 }
     
                 if (resp) {
+                  setListingsData(resp)
                   // setListingsState(newListingsStateCallback);
                   setSnackBarState((prev) => ({
                     ...prev,
@@ -297,7 +299,9 @@ export default function ListingDetail(props) {
         }
         fetchListingData();
       }, [setListingState]);
-
+  if (!listingData) {
+    return "Listing does not exist."
+  }
   return (
     <Container maxWidth="md">
     <Card>
@@ -354,9 +358,7 @@ export default function ListingDetail(props) {
 
       <CardActions>
         <Button  href="/" variant="outlined">Back to list</Button>
-        <Button
-          variant="contained"
-          className="w-24"
+        <Button variant="outlined" 
           onClick={() => {
             setListingState(listingData);
             setModalState((prev) => ({
@@ -365,13 +367,38 @@ export default function ListingDetail(props) {
               listingModalAction: LISTING_MODAL_ACTIONS.EDIT,
             }));
           }}
-        >
+          startIcon={<EditIcon />}>
           Edit
         </Button>
-        <Button variant="outlined" startIcon={<EditIcon />}>
-          Edit
-        </Button>
-        <Button variant="outlined" startIcon={<DeleteIcon />}>
+        <Button 
+          variant="outlined" 
+          startIcon={<DeleteIcon />}
+          color="error"
+          onClick={async () => {
+            // TODO: check user ownership
+            const resp = await APIs.deleteListing(listingData.listingId);
+            if (resp?.status === 200) {
+              setListingsData(null);
+              setSnackBarState((prev) => ({
+                ...prev,
+                isOpen: true,
+                message: `Delete listing: ${listingData.listingName}`,
+                severity: "success",
+              }));
+            } else {
+              // error message
+              const msg = resp?.response?.data
+                ? `ERROR: ${resp.response.data}`
+                : `ERROR: Failed to delete listing: ${listingData.listingName}`;
+              setSnackBarState((prev) => ({
+                ...prev,
+                isOpen: true,
+                message: msg,
+                severity: "error",
+              }));
+            }
+          }}
+          >
           Delete
         </Button>
       </CardActions>
