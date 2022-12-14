@@ -331,8 +331,16 @@ const LandingPage = () => {
       list: resp,
     });
   }
+  if (!localStorage.getItem(JWT_NAME)) {
+    return (<div> {setSnackBarState((prev) => ({
+      ...prev,
+      isOpen: true,
+      message: "Click on the top right button to login with google",
+      severity: "success",
+    }))} </div>);
+  }
   return (
-  {localStorage.getItem(JWT_NAME) ? (
+  
     <div className="flex flex-col">
        <FormControl sx={{ m: 1 }} variant="standard">
           <Grid  container>
@@ -410,15 +418,7 @@ const LandingPage = () => {
         </Grid>
       </Grid>
       <ListingModal />
-      </div>
-      ) : (<div> {setSnackBarState((prev) => ({
-        ...prev,
-        isOpen: true,
-        message: "Click on the top right button to login with google",
-        severity: "success",
-      }))} </div>)}
-    </div>
-    
+      </div> 
   );
 };
 
