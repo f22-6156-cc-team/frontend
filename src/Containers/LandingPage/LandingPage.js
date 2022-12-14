@@ -15,6 +15,7 @@ import {
   modalAtom,
   snackBarAtom,
   userExpSelector,
+  userAtom
 } from "../../utils/store";
 import { TextField } from "@mui/material";
 import { FormControlLabel } from "@mui/material";
@@ -27,9 +28,12 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import { Typography } from '@mui/material';
+
 import FormControl from "@mui/material/FormControl";
 import Input from "@mui/material/Input";
 import InputAdornment from "@mui/material/InputAdornment";
+import { comment } from "postcss";
+import { JWT_NAME } from "../../utils/const";
 const LISTINGS_PER_PAGE = 8;
 
 function ListingForm({ shrinkDefault }) {
@@ -297,6 +301,7 @@ const LandingPage = () => {
   const setModalState = useSetRecoilState(modalAtom);
   const userExp = useRecoilValue(userExpSelector);
   const navigate = useNavigate();
+  const [userState, setUserState] = useRecoilState(userAtom);
 
   useEffect(() => {
     async function fetchlistingsState() {
@@ -306,7 +311,7 @@ const LandingPage = () => {
       });
     }
     fetchlistingsState();
-
+    console.log(userState.hasLogined)
     // refetch when user updated
   }, [userExp]);
 
@@ -327,6 +332,7 @@ const LandingPage = () => {
     });
   }
   return (
+  {localStorage.getItem(JWT_NAME) ? (
     <div className="flex flex-col">
        <FormControl sx={{ m: 1 }} variant="standard">
           <Grid  container>
@@ -344,6 +350,7 @@ const LandingPage = () => {
           </Grid>
           
         </FormControl>
+      
       <Grid className="m-auto grid grid-cols-4 gap-8 p-8 pt-16">
         {/* <ListingContainer listingsState={currentPageData}/> */}
         {currentPageData.map((listing) => (
@@ -403,7 +410,15 @@ const LandingPage = () => {
         </Grid>
       </Grid>
       <ListingModal />
+      </div>
+      ) : (<div> {setSnackBarState((prev) => ({
+        ...prev,
+        isOpen: true,
+        message: "Click on the top right button to login with google",
+        severity: "success",
+      }))} </div>)}
     </div>
+    
   );
 };
 
