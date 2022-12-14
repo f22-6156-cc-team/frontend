@@ -60,14 +60,6 @@ function ListingForm({ shrinkDefault }) {
           {...(shrinkDefault && { InputLabelProps: { shrink: true } })}
         />
       ))}
-      {/* <Grid container>
-      <Button
-      variant="outlined"
-      onClick={handleValidateAddr}
-      >
-        Validate Addr
-      </Button>
-      </Grid> */}
       {[
         "currentResidentsNum",
         "totalResidentsNum",
