@@ -222,7 +222,7 @@ export const APIs = {
     console.log(REACT_APP_GOOGLE_PLACES_API);
     if (addressLines) {
       try {
-        const resp = await fetch(`${REACT_APP_GOOGLE_PLACES_API}`, {
+        const resp = await fetch(`${process.env.REACT_APP_GOOGLE_PLACES_API}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

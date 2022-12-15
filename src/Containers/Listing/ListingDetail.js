@@ -43,7 +43,7 @@ export default function ListingDetail(props) {
     const { lid } = useParams();
     const [listingData, setListingsData] = useState(null);
     const [userContactData, setUserContactData] = useState(null);
-    const [verificationFailed, setVerificationFailed] = useState(true);
+    const [verificationFailed, setVerificationFailed] = useState(false);
     const setListingState = useSetRecoilState(listingAtom);
     const setModalState = useSetRecoilState(modalAtom);
     const setSnackBarState = useSetRecoilState(snackBarAtom);
@@ -98,6 +98,9 @@ export default function ListingDetail(props) {
             <form
               onSubmit={async (event) => {
                 event.preventDefault();
+                setModalState(() => ({
+                  listingModalAction: LISTING_MODAL_ACTIONS.EDIT,
+                }));
 
                 const data = {
                   // FIXME: what is uid in jwt
@@ -146,19 +149,49 @@ export default function ListingDetail(props) {
                     verificationSuccess(resp) : verificationFailure();
                 });
 
-                const verificationSuccess = (resp) => {
-                  setVerificationFailed(false);
-                  setSnackBarState((prev) => ({
-                    ...prev,
-                    isOpen: true,
-                    message: 'please consider using this suggested formatted address: ' + resp?.result.address.formattedAddress,
-                    severity: "success",
-                  }));
+                async function verificationSuccess(rsp) {
+                  let resp;
+                  let msg = "";
+                  console.log(modalState.listingModalAction);
+                  if (
+                    modalState.listingModalAction === LISTING_MODAL_ACTIONS.UPLOAD
+                  ) {
+                    console.log("in upload mode");
+                    resp = await APIs.createListing(data);
+                    msg = `Upload listing: ${resp.listingName}`;
+                  } else if (
+                    modalState.listingModalAction === LISTING_MODAL_ACTIONS.EDIT
+                  ) {
+                    console.log('before update data', data);
+                    resp = await APIs.updateListing(listingData.listingId, data);
+                    msg = `Update listing: ${resp?.listingName}. Please consider using this suggested formatted address: ${rsp?.result.address.formattedAddress}`;
+                  } else {
+                    throw new Error("Not Implemented");
+                  }
+      
+                  if (resp) {
+                    setListingsData(resp)
+                    setSnackBarState((prev) => ({
+                      ...prev,
+                      isOpen: true,
+                      message: msg,
+                      severity: "success",
+                    }));
+                  } else {
+                    setSnackBarState((prev) => ({
+                      ...prev,
+                      isOpen: true,
+                      message: "error occured",
+                      severity: "warning",
+                    }));
+                  }
                   setModalState({
                     isListingModalOpen: false,
                   });
                 }
+
                 const verificationFailure = () => {
+                  console.log("in failure")
                   setVerificationFailed(true);
                   setSnackBarState((prev) => ({
                     ...prev,
@@ -169,49 +202,7 @@ export default function ListingDetail(props) {
                   setModalState({
                     isListingModalOpen: true,
                   });
-                };
-                console.log('status', verificationFailed);
-                if(verificationFailed){
-                  setModalState({
-                    isListingModalOpen: true,
-                  });
-                  event.preventDefault();
-                  return;
-                }
-
-                let resp;
-                let msg = "";
-                if (
-                  modalState.listingModalAction === LISTING_MODAL_ACTIONS.UPLOAD
-                ) {
-                  resp = await APIs.createListing(data);
-                  msg = `Upload listing: ${resp.listingName}`;
-                } else if (
-                  modalState.listingModalAction === LISTING_MODAL_ACTIONS.EDIT
-                ) {
-                  console.log('id', listingData.listingId);
-                  resp = await APIs.updateListing(listingData.listingId, data);
-                  msg = `Update listing: ${resp?.listingName}`;
-                } else {
-                  throw new Error("Not Implemented");
-                }
-    
-                if (resp) {
-                  setListingsData(resp)
-                  setSnackBarState((prev) => ({
-                    ...prev,
-                    isOpen: true,
-                    message: msg,
-                    severity: "success",
-                  }));
-                } else {
-                  setSnackBarState((prev) => ({
-                    ...prev,
-                    isOpen: true,
-                    message: "error occured",
-                    severity: "warning",
-                  }));
-                }
+                };            
               }}
             >
               <div className="grid grid-cols-2 gap-12">
