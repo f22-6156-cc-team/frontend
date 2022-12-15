@@ -144,6 +144,7 @@ function ListingModalContent() {
       "isSmokingFriendly",
       "hasMaintenance",
       "hasGym",
+      "links"
     ].forEach((label) => {
       const element = document.getElementById(label);
       element.value = listingState[label];
@@ -182,6 +183,7 @@ function ListingModalContent() {
               washerDryerLocation: "NA",
               hasMaintenance: 1,
               hasGym: 1,
+              links: {prev: 2, next: 4}
             };
 
             // transform date type
@@ -201,7 +203,7 @@ function ListingModalContent() {
               }
 
               data[item.id] = item.value;
-            });
+            });   
 
             // TODO: edit
             let resp;
@@ -217,7 +219,6 @@ function ListingModalContent() {
             ) {
               resp = await APIs.createListing(data);
               msg = `Upload listing: ${resp.listingName}`;
-              console.log(resp)
             } else if (
               modalState.listingModalAction === LISTING_MODAL_ACTIONS.EDIT
             ) {

@@ -39,9 +39,6 @@ import {
 } from "../../utils/store";
 
 
-
-
-
 export default function ListingDetail(props) {
     const { lid } = useParams();
     const [listingData, setListingsData] = useState(null);
@@ -52,6 +49,7 @@ export default function ListingDetail(props) {
     const viewerUid = props.userState.uid;
     const navigate = useNavigate();
     const isViewerOwner = props.userState.uid == listingData?.authorUserId;
+    
     function ListingModalContent() {
       /** upload or edit */
       const modalState = useRecoilValue(modalAtom);
@@ -99,6 +97,9 @@ export default function ListingDetail(props) {
             <form
               onSubmit={async (event) => {
                 event.preventDefault();
+                setModalState(() => ({
+                  listingModalAction: LISTING_MODAL_ACTIONS.EDIT,
+                }));
 
                 const data = {
                   // FIXME: what is uid in jwt
@@ -137,51 +138,69 @@ export default function ListingDetail(props) {
                     data[item.id] = parseInt(item.value);
                     return;
                   }
-    
                   data[item.id] = item.value;
                 });
-    
-                // TODO: edit
-                let resp;
-            
-                let msg = "";
-                if (
-                  modalState.listingModalAction === LISTING_MODAL_ACTIONS.UPLOAD
-                ) {
-                  resp = await APIs.createListing(data);
-                  msg = `Upload listing: ${resp.listingName}`;
-                } else if (
-                  modalState.listingModalAction === LISTING_MODAL_ACTIONS.EDIT
-                ) {
-                  resp = await APIs.updateListing(listingData.listingId, data);
-                  console.log(listingData);
-                  console.log(resp)
-                  msg = `Update listing: ${resp?.listingName}`;
-                } else {
-                  throw new Error("Not Implemented");
-                }
-    
-                if (resp) {
-                  setListingsData(resp)
-                  // setListingsState(newListingsStateCallback);
-                  setSnackBarState((prev) => ({
-                    ...prev,
-                    isOpen: true,
-                    message: msg,
-                    severity: "success",
-                  }));
-                } else {
-                  setSnackBarState((prev) => ({
-                    ...prev,
-                    isOpen: true,
-                    message: "error occured",
-                    severity: "warning",
-                  }));
-                }
-    
-                setModalState({
-                  isListingModalOpen: false,
+
+                const addr = data['listingAddress'];
+                APIs.getValidatedAddress(addr).then(resp => {
+                  console.log(resp);
+                  resp?.result?.verdict.validationGranularity === 'PREMISE' ? 
+                    verificationSuccess(resp) : verificationFailure();
                 });
+
+                async function verificationSuccess(rsp) {
+                  let resp;
+                  let msg = "";
+                  console.log(modalState.listingModalAction);
+                  if (
+                    modalState.listingModalAction === LISTING_MODAL_ACTIONS.UPLOAD
+                  ) {
+                    console.log("in upload mode");
+                    resp = await APIs.createListing(data);
+                    msg = `Upload listing: ${resp.listingName}`;
+                  } else if (
+                    modalState.listingModalAction === LISTING_MODAL_ACTIONS.EDIT
+                  ) {
+                    console.log('before update data', data);
+                    resp = await APIs.updateListing(listingData.listingId, data);
+                    msg = `Update listing: ${resp?.listingName}. Please consider using this suggested formatted address: ${rsp?.result.address.formattedAddress}`;
+                  } else {
+                    throw new Error("Not Implemented");
+                  }
+      
+                  if (resp) {
+                    setListingsData(resp)
+                    setSnackBarState((prev) => ({
+                      ...prev,
+                      isOpen: true,
+                      message: msg,
+                      severity: "success",
+                    }));
+                  } else {
+                    setSnackBarState((prev) => ({
+                      ...prev,
+                      isOpen: true,
+                      message: "error occured",
+                      severity: "warning",
+                    }));
+                  }
+                  setModalState({
+                    isListingModalOpen: false,
+                  });
+                }
+
+                const verificationFailure = () => {
+                  event.preventDefault();
+                  setSnackBarState((prev) => ({
+                    ...prev,
+                    isOpen: true,
+                    message: 'listingAddress does not look like valid address, please check your input',
+                    severity: "error",
+                  }));
+                  setModalState({
+                    isListingModalOpen: true,
+                  });
+                };            
               }}
             >
               <div className="grid grid-cols-2 gap-12">
@@ -212,82 +231,82 @@ export default function ListingDetail(props) {
       );
     }
     function ListingForm({ shrinkDefault }) {
-  const [startDate, setStartDate] = useState("2022/11/28");
-  const [endDate, setEndDate] = useState("2022/11/28");
+      const [startDate, setStartDate] = useState("2022/11/28");
+      const [endDate, setEndDate] = useState("2022/11/28");
 
-  return (
-    <>
-      {[
-        "listingName",
-        "listingAddress",
-        "locationArea",
-        "washerDryerLocation",
-      ].map((label) => (
-        <TextField
-          autoFocus
-          margin="dense"
-          id={label}
-          label={label}
-          key={label}
-          type="text"
-          fullWidth
-          variant="standard"
-          {...(shrinkDefault && { InputLabelProps: { shrink: true } })}
-        />
-      ))}
-      {[
-        "currentResidentsNum",
-        "totalResidentsNum",
-        "price",
-        "listingSize",
-        "listingTotalSize",
-        "floor",
-      ].map((label) => (
-        <TextField
-          autoFocus
-          margin="dense"
-          id={label}
-          label={label}
-          key={label}
-          type="number"
-          fullWidth
-          variant="standard"
-          {...(shrinkDefault && { InputLabelProps: { shrink: true } })}
-        />
-      ))}
-      <DatePicker
-        label="Start Date"
-        inputFormat="YYYY/MM/DD"
-        value={startDate}
-        onChange={(v) => {
-          setStartDate(v);
-        }}
-        renderInput={(params) => <TextField id={"startDate"} {...params} />}
-        // {...(shrinkDefault && { InputLabelProps: { shrink: true } })}
-      />
-      <DatePicker
-        label="End Date"
-        inputFormat="YYYY/MM/DD"
-        value={endDate}
-        onChange={(v) => {
-          setEndDate(v);
-        }}
-        renderInput={(params) => <TextField id={"endDate"} {...params} />}
-        // {...(shrinkDefault && { InputLabelProps: { shrink: true } })}
-      />
-      {["isPetFriendly", "isSmokingFriendly", "hasMaintenance", "hasGym"].map(
-        (label) => (
-          <FormControlLabel
-            control={<Checkbox id={label} />}
-            key={label}
+      return (
+        <>
+        {[
+          "listingName",
+          "listingAddress",
+          "locationArea",
+          "washerDryerLocation",
+        ].map((label) => (
+          <TextField
+            autoFocus
+            margin="dense"
+            id={label}
             label={label}
-            // {...(shrinkDefault && { InputLabelProps: { shrink: true } })}
+            key={label}
+            type="text"
+            fullWidth
+            variant="standard"
+            {...(shrinkDefault && { InputLabelProps: { shrink: true } })}
           />
-        )
-      )}
-    </>
-  );
-    }
+        ))}
+        {[
+          "currentResidentsNum",
+          "totalResidentsNum",
+          "price",
+          "listingSize",
+          "listingTotalSize",
+          "floor",
+        ].map((label) => (
+          <TextField
+            autoFocus
+            margin="dense"
+            id={label}
+            label={label}
+            key={label}
+            type="number"
+            fullWidth
+            variant="standard"
+            {...(shrinkDefault && { InputLabelProps: { shrink: true } })}
+          />
+        ))}
+        <DatePicker
+          label="Start Date"
+          inputFormat="YYYY/MM/DD"
+          value={startDate}
+          onChange={(v) => {
+            setStartDate(v);
+          }}
+          renderInput={(params) => <TextField id={"startDate"} {...params} />}
+          // {...(shrinkDefault && { InputLabelProps: { shrink: true } })}
+        />
+        <DatePicker
+          label="End Date"
+          inputFormat="YYYY/MM/DD"
+          value={endDate}
+          onChange={(v) => {
+            setEndDate(v);
+          }}
+          renderInput={(params) => <TextField id={"endDate"} {...params} />}
+          // {...(shrinkDefault && { InputLabelProps: { shrink: true } })}
+        />
+        {["isPetFriendly", "isSmokingFriendly", "hasMaintenance", "hasGym"].map(
+          (label) => (
+            <FormControlLabel
+              control={<Checkbox id={label} />}
+              key={label}
+              label={label}
+              // {...(shrinkDefault && { InputLabelProps: { shrink: true } })}
+            />
+          )
+        )}
+      </>
+    );
+  }
     function ListingModal() {
       /** upload or edit */
       const modalState = useRecoilValue(modalAtom);
@@ -323,6 +342,25 @@ export default function ListingDetail(props) {
     }
     fetchUserContactData(listingData?.authorUserId);}, [listingData, setListingsData]);
     const badgeContent = isViewerOwner ? "Your listing" : null;
+    const prev = listingData?.links?.prev == -1 ? false : true;
+    const next = listingData?.links?.next == -1 ? false : true;
+    const viewPrevListing = () => {
+      window.history.replaceState(null, '', `/listing/${listingData?.links.prev}`);
+      navigate(0);
+    };
+    const viewNextListing = () => {
+      window.history.replaceState(null, '', `/listing/${listingData?.links.next}`);
+      navigate(0);
+    };
+    const viewAllListings = () => {
+      window.history.replaceState(null, '', `/`);
+      navigate(0);
+    }
+    const viewUserPreference = () => {
+      window.history.replaceState(null, '', `/userpreference/${listingData?.authorUserId}`);
+      navigate(0);
+    }
+
   if (!listingData) {
     return "Listing does not exist."
   }
@@ -384,8 +422,18 @@ export default function ListingDetail(props) {
 
       <CardActions>
         <Button variant="outlined"
-          onClick={() => navigate(-1)}>Back to list
+          onClick={() => viewAllListings()}>Back to all listings
         </Button>
+        { prev && 
+          <Button variant="outlined"
+            onClick={() => viewPrevListing()}>Previous listing
+          </Button>
+        }
+        { next && 
+          <Button variant="outlined"
+            onClick={() => viewNextListing()}>Next listing
+          </Button>
+        }
         {isViewerOwner &&
         <>
         <Button variant="outlined" 
@@ -434,14 +482,16 @@ export default function ListingDetail(props) {
         </>
         }
         {!isViewerOwner && userContactData && 
-        <Mailto email={userContactData?.emails[0]?.address} subject="Hello & Welcome" body="Hi! I was wondering if your listing is still available? I'm interested in it.">
-          Contact Owner!
-        </Mailto>
+          <Mailto email={userContactData?.emails[0]?.address} subject="Hello & Welcome" body="Hi! I was wondering if your listing is still available? I'm interested in it.">
+            Contact Owner!
+          </Mailto>
+        }
+        {!isViewerOwner &&
+          <Button variant="outlined" onClick={() => viewUserPreference()}>See owner roommate preference</Button>
         }
       </CardActions>
     </Card>
     <ListingModal />
     </Container>
-  
   )
 }
