@@ -234,9 +234,6 @@ export const APIs = {
             }
           })  
         })
-        // .then((resp) => resp.json())
-        // .then((resp) => console.log('resp', resp))
-        // .then((resp) => {return resp;})
         return resp.json();
       } catch (e) {
         console.error(e);
