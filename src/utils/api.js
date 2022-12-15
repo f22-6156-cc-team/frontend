@@ -220,26 +220,4 @@ export const APIs = {
       return e;
     }
   },
-  async getValidatedAddress(addressLines) {
-    if (addressLines) {
-      try {
-        const resp = await fetch(`${GOOGLE_PLACES_API}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            'address': {
-                'addressLines': addressLines
-            }
-          })  
-        })
-        return resp.json();
-      } catch (e) {
-        console.error(e);
-        return e;
-      }
-    }
-    return null;
-  }
 };

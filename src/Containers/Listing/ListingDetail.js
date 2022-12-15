@@ -161,6 +161,7 @@ export default function ListingDetail(props) {
                 } else if (
                   modalState.listingModalAction === LISTING_MODAL_ACTIONS.EDIT
                 ) {
+                  console.log("data before", data);
                   resp = await APIs.updateListing(listingData.listingId, data);
                   msg = `Update listing: ${resp?.listingName}`;
                 } else {
