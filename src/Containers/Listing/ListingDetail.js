@@ -43,7 +43,6 @@ export default function ListingDetail(props) {
     const { lid } = useParams();
     const [listingData, setListingsData] = useState(null);
     const [userContactData, setUserContactData] = useState(null);
-    const [verificationFailed, setVerificationFailed] = useState(false);
     const setListingState = useSetRecoilState(listingAtom);
     const setModalState = useSetRecoilState(modalAtom);
     const setSnackBarState = useSetRecoilState(snackBarAtom);
@@ -191,8 +190,7 @@ export default function ListingDetail(props) {
                 }
 
                 const verificationFailure = () => {
-                  console.log("in failure")
-                  setVerificationFailed(true);
+                  event.preventDefault();
                   setSnackBarState((prev) => ({
                     ...prev,
                     isOpen: true,
