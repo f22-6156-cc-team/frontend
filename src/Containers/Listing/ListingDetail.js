@@ -43,6 +43,7 @@ export default function ListingDetail(props) {
     const { lid } = useParams();
     const [listingData, setListingsData] = useState(null);
     const [userContactData, setUserContactData] = useState(null);
+    const [verificationFailed, setVerificationFailed] = useState(true);
     const setListingState = useSetRecoilState(listingAtom);
     const setModalState = useSetRecoilState(modalAtom);
     const setSnackBarState = useSetRecoilState(snackBarAtom);
@@ -141,17 +142,44 @@ export default function ListingDetail(props) {
                 const addr = data['listingAddress'];
                 APIs.getValidatedAddress(addr).then(resp => {
                   console.log(resp);
+                  resp?.result?.verdict.validationGranularity === 'PREMISE' ? 
+                    verificationSuccess(resp) : verificationFailure();
+                });
+
+                const verificationSuccess = (resp) => {
+                  setVerificationFailed(false);
                   setSnackBarState((prev) => ({
                     ...prev,
                     isOpen: true,
                     message: 'please consider using this suggested formatted address: ' + resp?.result.address.formattedAddress,
                     severity: "success",
-                  })
-                )});            
-    
-                // TODO: edit
+                  }));
+                  setModalState({
+                    isListingModalOpen: false,
+                  });
+                }
+                const verificationFailure = () => {
+                  setVerificationFailed(true);
+                  setSnackBarState((prev) => ({
+                    ...prev,
+                    isOpen: true,
+                    message: 'listingAddress does not look like valid address, please check your input',
+                    severity: "error",
+                  }));
+                  setModalState({
+                    isListingModalOpen: true,
+                  });
+                };
+                console.log('status', verificationFailed);
+                if(verificationFailed){
+                  setModalState({
+                    isListingModalOpen: true,
+                  });
+                  event.preventDefault();
+                  return;
+                }
+
                 let resp;
-            
                 let msg = "";
                 if (
                   modalState.listingModalAction === LISTING_MODAL_ACTIONS.UPLOAD
@@ -161,7 +189,7 @@ export default function ListingDetail(props) {
                 } else if (
                   modalState.listingModalAction === LISTING_MODAL_ACTIONS.EDIT
                 ) {
-                  console.log("data before", data);
+                  console.log('id', listingData.listingId);
                   resp = await APIs.updateListing(listingData.listingId, data);
                   msg = `Update listing: ${resp?.listingName}`;
                 } else {
@@ -170,7 +198,6 @@ export default function ListingDetail(props) {
     
                 if (resp) {
                   setListingsData(resp)
-                  // setListingsState(newListingsStateCallback);
                   setSnackBarState((prev) => ({
                     ...prev,
                     isOpen: true,
@@ -185,10 +212,6 @@ export default function ListingDetail(props) {
                     severity: "warning",
                   }));
                 }
-    
-                setModalState({
-                  isListingModalOpen: false,
-                });
               }}
             >
               <div className="grid grid-cols-2 gap-12">

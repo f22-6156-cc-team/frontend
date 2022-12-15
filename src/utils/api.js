@@ -1,10 +1,10 @@
 import Axios from "axios";
 import { JWT_NAME } from "./const";
 
-const GOOGLE_PLACES_API = "https://addressvalidation.googleapis.com/v1:validateAddress?key=AIzaSyC_bgUWAymO0NfPmyDkz9H2V_M1VMmOtT0";
 export const request = Axios.create({
   baseURL: process.env.REACT_APP_BASE_URL,
 });
+const REACT_APP_GOOGLE_PLACES_API="https://addressvalidation.googleapis.com/v1:validateAddress?key=AIzaSyC_bgUWAymO0NfPmyDkz9H2V_M1VMmOtT0"
 
 // set every request headers with JWT Token
 request.interceptors.request.use((req) => {
@@ -165,9 +165,7 @@ export const APIs = {
   },
   async updateListing(listingId, data) {
     try {
-      console.log('in api', data);
       const resp = await request.put(`/listing/${listingId}`, data);
-      console.log('in api resp', resp)
       return {
         ...resp.data,
       };
@@ -221,9 +219,10 @@ export const APIs = {
     }
   },
   async getValidatedAddress(addressLines) {
+    console.log(REACT_APP_GOOGLE_PLACES_API);
     if (addressLines) {
       try {
-        const resp = await fetch(`${GOOGLE_PLACES_API}`, {
+        const resp = await fetch(`${REACT_APP_GOOGLE_PLACES_API}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

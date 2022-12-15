@@ -217,7 +217,6 @@ function ListingModalContent() {
             ) {
               resp = await APIs.createListing(data);
               msg = `Upload listing: ${resp.listingName}`;
-              console.log(resp);
             } else if (
               modalState.listingModalAction === LISTING_MODAL_ACTIONS.EDIT
             ) {
