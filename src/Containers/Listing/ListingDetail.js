@@ -143,7 +143,7 @@ export default function ListingDetail(props) {
                   setSnackBarState((prev) => ({
                     ...prev,
                     isOpen: true,
-                    message: 'please enter the formatted address: ' + resp?.result.address.formattedAddress,
+                    message: 'please consider using this suggested formatted address: ' + resp?.result.address.formattedAddress,
                     severity: "success",
                   })
                 )});            
