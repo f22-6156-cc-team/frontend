@@ -24,6 +24,7 @@ function UserProfile (props) {
   const modalState = useRecoilValue(modalAtom);
   const setModalState = useSetRecoilState(modalAtom);
   const setSnackBarState = useSetRecoilState(snackBarAtom);
+  const [userState, setUserState] = useRecoilState(userAtom);
 
   function EditForm() {
     return (
@@ -125,9 +126,9 @@ function UserProfile (props) {
               </div>
             </div>
             <div className="pt-1 pr-2 flex-1 flex flex-col items-end space-y-2">
-                <Button variant="contained" className="w-24" onClick={() => {setModalState({isUploadModalOpen: true});}}>
+                {(userState.uid !== uid) ? "" : <Button variant="contained" className="w-24" onClick={() => {setModalState({isUploadModalOpen: true});}}>
                   Edit
-                </Button>
+                </Button>}
             </div>
           </CardContent>
         </Card>

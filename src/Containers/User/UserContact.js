@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Axios from "axios";import { useParams, Link, useNavigate} from "react-router-dom";
 import { Card, CardContent, Modal, Select, MenuItem, Grid, Button, TextField, FormControl, InputLabel} from "@mui/material";
 import { login } from "../../utils/login";
-import { useSetRecoilState, useRecoilValue} from 'recoil';
+import { useSetRecoilState, useRecoilValue, useRecoilState} from 'recoil';
 import { userAtom, modalAtom} from "../../utils/store";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -16,7 +16,7 @@ function UserContact() {
   const modalState = useRecoilValue(modalAtom);
   const setModalState = useSetRecoilState(modalAtom);
   const navigate = useNavigate();
-  const setUserState = useSetRecoilState(userAtom);
+  const [userState, setUserState] = useRecoilState(userAtom);
   const [email, setEmail] = useState("Personal");
   const onEmail = (e) => setEmail(e.target.value);
   const [phone, setPhone] = useState("Home");
@@ -149,9 +149,9 @@ function UserContact() {
               </div>
             </div>
             <div className="pt-1 pr-2 flex-1 flex flex-col items-end space-y-2">
-                <Button variant="contained" className="w-24" onClick={() => {setModalState({isUploadModalOpen: true});}}>
+                {(userState.uid !== uid) ? "" : <Button variant="contained" className="w-24" onClick={() => {setModalState({isUploadModalOpen: true});}}>
                   Edit
-                </Button>
+                </Button>}
             </div>
           </CardContent>
         </Card>

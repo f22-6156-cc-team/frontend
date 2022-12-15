@@ -5,8 +5,8 @@ import "./User.css";
 import { APIs } from "../../utils/api";
 import { Card, CardContent, Modal, Select, MenuItem, Grid, Button, InputLabel, FormControl} from "@mui/material";
 import "./User.css";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { modalAtom, userExpSelector, snackBarAtom } from "../../utils/store";
+import { useRecoilValue, useSetRecoilState, useRecoilState } from "recoil";
+import { modalAtom, userExpSelector, snackBarAtom, userAtom} from "../../utils/store";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { JWT_NAME } from "../../utils/const";
@@ -33,6 +33,7 @@ function UserPreference() {
   const onSmoke = (e) => setSmoke(e.target.value);
   const onParty = (e) => setParty(e.target.value);
   const onGuest = (e) => setGuest(e.target.value);
+  const [userState, setUserState] = useRecoilState(userAtom);
 
   function handleWake(e){
     setWake(e.target.value);
@@ -215,9 +216,9 @@ function UserPreference() {
               </div>
             </div>
             <div className="pt-1 pr-2 flex-1 flex flex-col items-end space-y-2">
-                <Button variant="contained" className="w-24" onClick={() => {setModalState({isUploadModalOpen: true});}}>
+                {(userState.uid !== uid) ? "" : <Button variant="contained" className="w-24" onClick={() => {setModalState({isUploadModalOpen: true});}}>
                   Edit
-                </Button>
+                </Button>}
             </div>
           </CardContent>
         </Card>
